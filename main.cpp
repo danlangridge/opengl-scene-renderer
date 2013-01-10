@@ -1,9 +1,11 @@
 #include "gllibs.h"
-#include "Particle.h"
+#include "Sprite.h"
 
 GLfloat change = 0.f;
 GLfloat gCameraX = 0.f;
 GLfloat gCameraY = 0.f;
+
+Sprite s = Sprite();
 
 void output(int x,int y,float r,float g,float b, char string[]) {
   glColor3f (r,g,b);
@@ -16,19 +18,21 @@ void output(int x,int y,float r,float g,float b, char string[]) {
 }
 
 void out_position() {
-  char* s;
+  char* str;
   std::string p;
   std::stringstream out;
   out << "POSITION X: " << gCameraX << " Y: " << gCameraY;
   p = out.str();
-  s = (char*)(p.c_str());
-  output(-SCREEN_WIDTH / 4.f, -SCREEN_HEIGHT / 4.f,1.f,1.f,0.f, s);
+  str = (char*)(p.c_str());
+  output(-SCREEN_WIDTH / 4.f, -SCREEN_HEIGHT / 4.f,1.f,1.f,0.f, str);
 }
 
 
 bool initGL() {
   glViewport(0.f,0.f,SCREEN_WIDTH,SCREEN_HEIGHT);
   
+  s.v.x = 1.f;
+  //s.a.y = 2.f; 
   // Projection Matrix
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -48,13 +52,31 @@ bool initGL() {
   return true;
 }
 
-void update() { change += 1.f;}
+void update() { 
+ s.integrate(1);
+
+ if (s.p.x > SCREEN_WIDTH && s.v.x > 0) {
+   s.v.x = -s.v.x;
+ }
+ else if (s.p.x < 0 && s.v.x < 0) {
+   s.v.x = -s.v.x;
+ }
+ else if (s.p.y < SCREEN_HEIGHT && s.v.y < 0) {
+   s.v.y = -s.v.y;
+ }
+ else if (s.p.y > 0 && s.v.y > 0) {
+   s.v.y = -s.v.y;
+ }
+
+}
 
 void render() {
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
   glPopMatrix();
   glPushMatrix();
+
+  s.render(); 
 
   // Go to middle of the screen
   glTranslatef(SCREEN_WIDTH/2.f,SCREEN_HEIGHT/2.f,0.f);
