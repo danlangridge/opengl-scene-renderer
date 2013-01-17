@@ -1,11 +1,27 @@
 #include "gllibs.h"
 #include "Sprite.h"
+#include "PFholder.h"
 
 GLfloat change = 0.f;
 GLfloat gCameraX = 0.f;
 GLfloat gCameraY = 0.f;
 
+
 Sprite s = Sprite();
+
+PFholder sprites;
+void generate_particles() {
+  Vector grav = Vector(0.f,1.f,0.f);
+  ParticleGravity* g = new ParticleGravity(grav);
+  for (unsigned i = 0; i < 20; i++) {
+    Sprite* s = new Sprite(); 
+    (s->p).x = 30.f + (float)i;
+    (s->v).x = 5.f + (float)i;
+    sprites.add(s, g);
+    } 
+}
+
+
 
 void output(int x,int y,float r,float g,float b, char string[]) {
   glColor3f (r,g,b);
@@ -30,9 +46,10 @@ void out_position() {
 
 bool initGL() {
   glViewport(0.f,0.f,SCREEN_WIDTH,SCREEN_HEIGHT);
-  
+ 
+  s.color[1] = 1;
   s.v.x = 1.f;
-  //s.a.y = 2.f; 
+  s.a.y = 2.f; 
   // Projection Matrix
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -52,22 +69,26 @@ bool initGL() {
   return true;
 }
 
-void update() { 
- s.integrate(1);
+void update() {
+ sprites.updateForces(1); 
 
- if (s.p.x > SCREEN_WIDTH && s.v.x > 0) {
-   s.v.x = -s.v.x;
- }
- else if (s.p.x < 0 && s.v.x < 0) {
-   s.v.x = -s.v.x;
- }
- else if (s.p.y < SCREEN_HEIGHT && s.v.y < 0) {
-   s.v.y = -s.v.y;
- }
- else if (s.p.y > 0 && s.v.y > 0) {
-   s.v.y = -s.v.y;
- }
+ for (std::vector<PFcontainer*>::iterator i = sprites.PFstorage.begin(); 
+      i!= sprites.PFstorage.end(); i++) {
+  (*i)->particle->integrate(1);
 
+ if (((*i)->particle->p).x > SCREEN_WIDTH && ((*i)->particle->v).x > 0) {
+   ((*i)->particle->v).x = -((*i)->particle->v).x;
+ }
+ else if (((*i)->particle->p).x < 0 && ((*i)->particle->v).x < 0) {
+   ((*i)->particle->v).x = -((*i)->particle->v).x;
+ }
+ else if (((*i)->particle->p).y > SCREEN_HEIGHT && ((*i)->particle->v).y > 0) {
+   ((*i)->particle->v).y = -((*i)->particle->v).y;
+ }
+ else if (((*i)->particle->p).y < 0 && ((*i)->particle->v).y < 0) {
+   ((*i)->particle->v).y = -((*i)->particle->v).y;
+ }
+ }
 }
 
 void render() {
@@ -76,19 +97,23 @@ void render() {
   glPopMatrix();
   glPushMatrix();
 
-  s.render(); 
+  //s.render(); 
 
   // Go to middle of the screen
   glTranslatef(SCREEN_WIDTH/2.f,SCREEN_HEIGHT/2.f,0.f);
   
-  glBegin(GL_QUADS);
+ for (std::vector<PFcontainer*>::iterator i = sprites.PFstorage.begin(); 
+      i!= sprites.PFstorage.end(); i++) {
+  (*i)->particle->render();
+}
+ /* glBegin(GL_QUADS);
     glColor3f(1.f,0.f,0.f);
     glVertex2f(-10.f, -10.f);
     glVertex2f(10.f, -10.f);
     glVertex2f(20.f, 20.f);
     glVertex2f(-20.f, 20.f);
   glEnd();
-
+*/
   out_position();
   glutSwapBuffers();
 }
@@ -100,6 +125,7 @@ void handleKeys(unsigned char key, int x, int y) {
   else if (key == 's') {gCameraY += 16.f;}
   else if (key == 'a') {gCameraX -= 16.f;}
   else if (key == 'd') {gCameraX += 16.f;}
+  else if (key == 'g') {s.v.x += 1;}
   glMatrixMode(GL_MODELVIEW);
   glPopMatrix();
   glLoadIdentity();
@@ -109,7 +135,8 @@ void handleKeys(unsigned char key, int x, int y) {
 
 
 void initAll(int argv, char* argc[]) {
-
+  generate_particles();
+  
   // GLUT INITIALIZATION
   glutInit(&argv,argc);
   glutInitWindowPosition(SCREEN_WIDTH,SCREEN_HEIGHT);
