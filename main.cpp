@@ -1,36 +1,40 @@
 //#include "gllibs.h"
 #include "Sprite.h"
 #include "PFholder.h"
-
+#include <cstdlib>
 #define ABS(x)  ((x <= 0) ? -x : x)  
 
 GLfloat change = 0.f;
 GLfloat gCameraX = 0.f;
 GLfloat gCameraY = 0.f;
+GLfloat DEPTH_MIN = 1000.0; 
+GLfloat DEPTH_MAX = -1000.0;
 
 
-Sprite s = Sprite();
+PFholder* holder = new PFholder[4];
 PFholder sprites;
 PFholder dust;
 PFholder steam;
 PFholder slag;
 
-const int NUM_SPRITES = 20;
 
+const int NUM_SPRITES = 50;
 
-void generateParticles(PFholder &part, float x, float y, float z) {
+void generateParticles(PFholder &ph, float x, float y, float z) {
+  srand(10);
   Vector grav = Vector(x, y, z);
   ParticleGravity* g = new ParticleGravity(grav);
   for (unsigned i = 0; i < NUM_SPRITES; i++) {
-    Sprite* s = new Sprite();
-    s->color[0] = ABS(x);
-    s->color[1] = ABS(y);
-    s->color[2] = ABS(z);
-    (s->p).x = (float)i;
-    (s->p).y = -(float)i;
+    int temp = rand() % 5 + 5;
+    Sprite* s = new Sprite(temp,temp);
+    s->setColor( ABS(x), ABS(y), ABS(z));
+    s->d = (float)(999 - (rand() % 40))/999;
+    (s->p).x = rand() % SCREEN_WIDTH;//(float)i;
+    (s->p).y = rand() % SCREEN_HEIGHT;//-(float)i;
     (s->v).x = (float)i;
     (s->v).y = (float)i;
-    part.add(s, g);
+    //(s->v).z = (float)i;
+    ph.add(s, g);
     } 
 }
 
@@ -44,7 +48,7 @@ void output(int x,int y,float r,float g,float b, char string[]) {
     }
 }
 
-void out_position() {
+void outPosition() {
   char* str;
   std::string p;
   std::stringstream out;
@@ -52,20 +56,41 @@ void out_position() {
   p = out.str();
   str = (char*)(p.c_str());
   output(-SCREEN_WIDTH / 4.f, -SCREEN_HEIGHT / 4.f,1.f,1.f,0.f, str);
+  //printf("Position X: %f Y: %f\n", gCameraX, gCameraY);  
 }
 
+
+
+void drawAxis() {
+  glBegin(GL_LINES);
+    glColor3f(1,0,0);
+    glVertex3f(0,0,0);
+    glVertex3f(10,0,0);
+  glEnd();
+
+  glBegin(GL_LINES);
+    glColor3f(0,1,0);
+    glVertex3f(0,0,0);
+    glVertex3f(0,10,0);
+  glEnd();
+  
+  glBegin(GL_LINES);
+    glColor3f(0,0,1);
+    glVertex3f(0,0,0);
+    glVertex3f(0,0,10);
+  glEnd();
+}
 
 bool initGL() {
   glViewport(0.f,0.f,SCREEN_WIDTH,SCREEN_HEIGHT);
  
-  s.color[1] = 1;
-  s.v.x = 1.f;
-  s.a.y = 2.f; 
   
   // Projection Matrix
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0.0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0, 1.0, -1.0);
+  //glFrustum(0.0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0, 0.1, 1.0);
+  glOrtho(0.0,SCREEN_WIDTH, SCREEN_HEIGHT, 0.0, DEPTH_MIN, DEPTH_MAX);
+  //gluPerspective(45, 45, DEPTH_MIN, DEPTH_MAX );
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glPushMatrix();
@@ -99,16 +124,21 @@ void boundsCheck(PFholder &part) {
   else if (((*i)->particle->p).y < 0 && ((*i)->particle->v).y < 0) {
      ((*i)->particle->v).y = -((*i)->particle->v).y;
   }
+  else if (((*i)->particle->p).z > DEPTH_MAX && ((*i)->particle->v).y > 0) {
+     ((*i)->particle->v).z = -((*i)->particle->v).z;
+  }
+  else if (((*i)->particle->p).z < DEPTH_MIN && ((*i)->particle->v).y < 0) {
+     ((*i)->particle->v).z = -((*i)->particle->v).z;
+  }
  }
 
 }
 
 
 void update() {
- boundsCheck(sprites);
- boundsCheck(dust);
- boundsCheck(steam);
- boundsCheck(slag);
+ for (unsigned i = 0; i < 4; i++) {
+  boundsCheck(holder[i]);
+ } 
 }
 
 void pfRender(PFholder &part) {
@@ -123,17 +153,17 @@ void render() {
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   
-  // Go to middle of the screen 
-  pfRender(sprites);
-  pfRender(dust);
-  pfRender(steam);
-  pfRender(slag);
+  // Render Particles
+ for (unsigned i = 0; i < 4; i++) {
+  pfRender(holder[i]);
+ } 
 
   // Generate Pointer 
   glColor3f(255,0,0); 
   glPushMatrix();
   glLoadIdentity();
-  glTranslatef(SCREEN_WIDTH/2.f,SCREEN_HEIGHT/2.f,0.f);
+  glTranslatef(SCREEN_WIDTH/2.f,SCREEN_HEIGHT/2.f,DEPTH_MAX/DEPTH_MIN);
+      drawAxis();     
       glBegin(GL_QUADS);
         glVertex2f(-2, -2);
         glVertex2f(-2, 2);
@@ -142,7 +172,7 @@ void render() {
       glEnd();
  glPopMatrix();
  glTranslatef(SCREEN_WIDTH/2.f,SCREEN_HEIGHT/2.f,0.f);
-  out_position();
+  outPosition();
   glPopMatrix();
   glutSwapBuffers();
 }
@@ -154,7 +184,15 @@ void handleKeys(unsigned char key, int x, int y) {
   else if (key == 's') {gCameraY += 16.f;}
   else if (key == 'a') {gCameraX -= 16.f;}
   else if (key == 'd') {gCameraX += 16.f;}
-  else if (key == 'g') {s.v.x += 1;}
+  else if (key == 'g') {
+
+    for (unsigned i = 0; i < 4; i++) {
+      Vector* point = &(((ParticleGravity*)((holder[i].PFstorage[0])->generator))->g); 
+       point->x = -point->x;
+       point->y = -point->y;
+    }
+  }
+    
   else if (key == '`') {exit(1);}
   glMatrixMode(GL_MODELVIEW);
   glPopMatrix();
@@ -165,10 +203,11 @@ void handleKeys(unsigned char key, int x, int y) {
 
 
 void initAll(int argv, char* argc[]) {
-  generateParticles(sprites, 0.0, 1.0, 0.0);
-  generateParticles(dust, 1.0, 1.0, 0.0);
-  generateParticles(steam, 0, 0.0, -1.0);
-  generateParticles(slag, -1.0, 0, 0);
+ 
+  generateParticles(holder[0], 0.0, 1.0, 0.0);
+  generateParticles(holder[1], 1.0, 1.0, 0.0);
+  generateParticles(holder[2], 0, 0.0, -1.0);
+  generateParticles(holder[3], -1.0, 0, 0);
   
   // GLUT INITIALIZATION
   glutInit(&argv,argc);

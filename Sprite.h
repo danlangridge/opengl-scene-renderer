@@ -11,6 +11,7 @@ class Sprite : public Particle {
     GLfloat* color;
     Sprite();
     Sprite(float h, float w);
+    void setColor(float x, float y, float z);
     void render();
     ~Sprite();
 };

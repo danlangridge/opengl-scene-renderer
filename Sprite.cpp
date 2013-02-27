@@ -11,6 +11,7 @@
      color[1] = 1.f;
      color[2] = 1.f;
     }
+    
     Sprite::Sprite(float h, float w) {
       this->h = h;
       this->w = w;
@@ -19,16 +20,23 @@
       color[1] = 1.f;
       color[2] = 1.f;
     }
+    
+   void Sprite::setColor(float x, float y, float z) {
+      color[0] = x;
+      color[1] = y;
+      color[2] = z;
+    }
+    
     void Sprite::render() {
       //glClearColor(0.f,0.f,0.f,1.f);
       glColor3f(color[0],color[1],color[2]);
       //glColor3f(1,0,0);
       //printf("Render\n");
       glBegin(GL_QUADS);
-        glVertex2f(p.x-w, p.y+h);
-        glVertex2f(p.x+w, p.y+h);
-        glVertex2f(p.x+w, p.y-h);
-        glVertex2f(p.x-w, p.y-h);
+        glVertex3f(p.x-w, p.y+h, p.z);
+        glVertex3f(p.x+w, p.y+h, p.z);
+        glVertex3f(p.x+w, p.y-h, p.z);
+        glVertex3f(p.x-w, p.y-h, p.z);
       glEnd();
     
      if (DEBUG_RENDER) { 
@@ -39,6 +47,7 @@
          glEnd();
     }
    }
+   
    Sprite::~Sprite() {
     delete [] color;
    }
