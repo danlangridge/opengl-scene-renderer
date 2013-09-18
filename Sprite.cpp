@@ -6,15 +6,17 @@
      d = .999f;
      h = 2;
      w = 2;
+     l = 2;
      color = new GLfloat[3];
      color[0] = 1.f;
      color[1] = 1.f;
      color[2] = 1.f;
     }
     
-    Sprite::Sprite(float h, float w) {
+    Sprite::Sprite(float h, float w, float l) {
       this->h = h;
       this->w = w;
+      this->l = l;
       color = new GLfloat[3];
       color[0] = 1.f;
       color[1] = 1.f;
@@ -32,12 +34,35 @@
       glColor3f(color[0],color[1],color[2]);
       //glColor3f(1,0,0);
       //printf("Render\n");
+      
       glBegin(GL_QUADS);
-        glVertex3f(p.x-w, p.y+h, p.z);
-        glVertex3f(p.x+w, p.y+h, p.z);
-        glVertex3f(p.x+w, p.y-h, p.z);
-        glVertex3f(p.x-w, p.y-h, p.z);
+        glVertex3f(p.x-w, p.y+h, p.z+l);
+        glVertex3f(p.x+w, p.y+h, p.z+l);
+        glVertex3f(p.x+w, p.y-h, p.z+l);
+        glVertex3f(p.x-w, p.y-h, p.z+l);
       glEnd();
+     
+     glBegin(GL_QUADS);
+        glVertex3f(p.x-w, p.y+h, p.z-l);
+        glVertex3f(p.x+w, p.y+h, p.z-l);
+        glVertex3f(p.x+w, p.y-h, p.z-l);
+        glVertex3f(p.x-w, p.y-h, p.z-l);
+      glEnd();
+     
+     glBegin(GL_QUADS);
+        glVertex3f(p.x+w, p.y+h, p.z+l);
+        glVertex3f(p.x+w, p.y+h, p.z-l);
+        glVertex3f(p.x+w, p.y-h, p.z-l);
+        glVertex3f(p.x+w, p.y-h, p.z+l);
+      glEnd();
+     
+     glBegin(GL_QUADS);
+        glVertex3f(p.x-w, p.y+h, p.z+l);
+        glVertex3f(p.x-w, p.y+h, p.z-l);
+        glVertex3f(p.x-w, p.y-h, p.z-l);
+        glVertex3f(p.x-w, p.y-h, p.z+l);
+      glEnd();
+     
     
      if (DEBUG_RENDER) { 
        glColor3f(1.f,1.f,1.f);
