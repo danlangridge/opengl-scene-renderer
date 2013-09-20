@@ -88,7 +88,29 @@ bool initGL() {
   glViewport(0.f,0.f,SCREEN_WIDTH,SCREEN_HEIGHT);
  
   // TODO: Load Shaders
+  /*
+  uint vertexShaderID = glCreateShader(VERTEX_SHADER);
+  uint fragmentShaderID = glCreateShader(FRAGMENT_SHADER);
 
+  string vertexShaderName[] = {"Main.vert"};
+  string fragmentShaderName[] = {"Main.frag"};
+
+  glShaderSource(vertexShaderID, 1, vertexShaderName, 1);
+  glShaderSource(fragmentShaderID, 1, fragmentShaderName, 1);
+
+  glCompileShader(vertexShaderID);
+  glCompileShader(fragmentShaderID);
+
+  uint program = glCreateProgram();
+
+  glAttachShader(program, vertexShaderID);
+  glAttachShader(program, fragmentShaderID);
+
+  glLinkProgram(program);
+
+  glUseProgram(program);
+  */
+  
   // Projection Matrix
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
