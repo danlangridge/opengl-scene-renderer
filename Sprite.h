@@ -1,7 +1,6 @@
-#ifndef SPRITE_H
-#define SPRITE_H
+#pragma once
 
-#include "gllibs.h"
+#include "gl_libs.h"
 #include "Particle.h"
 
 class Sprite : public Particle {
@@ -16,4 +15,3 @@ class Sprite : public Particle {
     void render();
     ~Sprite();
 };
-#endif

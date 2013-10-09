@@ -1,13 +1,19 @@
-//#include "gllibs.h"
+#include "gl_libs.h"
 #include "Sprite.h"
 #include "PFholder.h"
+
 #include <cstdlib>
+
 #define ABS(x)  ((x <= 0) ? -x : x)  
 
 GLfloat change = 0.f;
+
+/*
 GLfloat gCameraX = 0.f;
 GLfloat gCameraY = 0.f;
 GLfloat gCameraZ = 0.f;
+*/
+
 Vector Camera;
 
 
@@ -86,14 +92,13 @@ void drawAxis() {
 
 bool initGL() {
   glViewport(0.f,0.f,SCREEN_WIDTH,SCREEN_HEIGHT);
- 
+/* 
   // TODO: Load Shaders
-  /*
   uint vertexShaderID = glCreateShader(VERTEX_SHADER);
   uint fragmentShaderID = glCreateShader(FRAGMENT_SHADER);
 
-  string vertexShaderName[] = {"Main.vert"};
-  string fragmentShaderName[] = {"Main.frag"};
+  std::string vertexShaderName[] = {"shaders/main.vert"};
+  std::string fragmentShaderName[] = {"shaders/main.frag"};
 
   glShaderSource(vertexShaderID, 1, vertexShaderName, 1);
   glShaderSource(fragmentShaderID, 1, fragmentShaderName, 1);
@@ -109,8 +114,7 @@ bool initGL() {
   glLinkProgram(program);
 
   glUseProgram(program);
-  */
-  
+ */ 
   // Projection Matrix
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
