@@ -1,32 +1,18 @@
-#include "gl_libs.h"
-#include "Sprite.h"
-#include "PFholder.h"
 
+#include <statics.h>
+#include <Sprite.h>
+#include <gl_libs.h>
+#include <PFholder.h>
+#include <GameContext.h>
+#include <KeyInput.h>
+
+#include <fstream>
+#include <cstdio>
 #include <cstdlib>
+
 
 #define ABS(x)  ((x <= 0) ? -x : x)  
 
-GLfloat change = 0.f;
-
-/*
-GLfloat gCameraX = 0.f;
-GLfloat gCameraY = 0.f;
-GLfloat gCameraZ = 0.f;
-*/
-
-Vector Camera;
-
-
-GLfloat CLIPPING_DEPTH_MIN = 100;
-GLfloat CLIPPING_DEPTH_MAX = 2000;
-GLfloat CENTER = (CLIPPING_DEPTH_MAX-CLIPPING_DEPTH_MIN)/2;
-GLfloat DEPTH_MIN = -CENTER; 
-GLfloat DEPTH_MAX = +CENTER;
-
-PFholder* holder = new PFholder[4];
-
-
-const int NUM_SPRITES = 50;
 
 void generateParticles(PFholder &ph, float x, float y, float z) {
   srand(10);
@@ -47,7 +33,7 @@ void generateParticles(PFholder &ph, float x, float y, float z) {
     } 
 }
 
-void output(int x,int y,float r,float g,float b, char string[]) {
+void output(int x,int y, float r, float g, float b, char string[]) {
   glColor3f (r,g,b);
   glRasterPos2f(x,y);
   int len, i;
@@ -87,54 +73,6 @@ void drawAxis() {
     glVertex3f(0,0,0);
     glVertex3f(0,0,100);
   glEnd();
-}
-
-
-bool initGL() {
-  glViewport(0.f,0.f,SCREEN_WIDTH,SCREEN_HEIGHT);
-/* 
-  // TODO: Load Shaders
-  uint vertexShaderID = glCreateShader(VERTEX_SHADER);
-  uint fragmentShaderID = glCreateShader(FRAGMENT_SHADER);
-
-  std::string vertexShaderName[] = {"shaders/main.vert"};
-  std::string fragmentShaderName[] = {"shaders/main.frag"};
-
-  glShaderSource(vertexShaderID, 1, vertexShaderName, 1);
-  glShaderSource(fragmentShaderID, 1, fragmentShaderName, 1);
-
-  glCompileShader(vertexShaderID);
-  glCompileShader(fragmentShaderID);
-
-  uint program = glCreateProgram();
-
-  glAttachShader(program, vertexShaderID);
-  glAttachShader(program, fragmentShaderID);
-
-  glLinkProgram(program);
-
-  glUseProgram(program);
- */ 
-  // Projection Matrix
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glFrustum(-SCREEN_WIDTH/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, -SCREEN_HEIGHT/2, CLIPPING_DEPTH_MIN, CLIPPING_DEPTH_MAX);
-  
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-   
-  glPushMatrix();
-
-  glClearColor(0.f,0.f,0.f,1.f);
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_DEPTH_TEST);
-  //glDepthFunc(GL_GREATER);
-  GLenum error = glGetError();
-  if(error != GL_NO_ERROR) { 
-    printf("Error initializing OpenGL! %s\n",gluErrorString(error));
-    return false;
-  } 
-  return true;
 }
 
 
@@ -178,7 +116,6 @@ void pfRender(PFholder &part) {
  }
 }
 
-float rotatei = 0, rotatej = 0, rotatek = 0, rotatea = 0;
 
 void render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -206,6 +143,7 @@ void render() {
  drawAxis();
  
  //glLoadIdentity();
+ /*
   glColor3f(1,0,0); 
   
   glBegin(GL_QUADS);
@@ -232,7 +170,7 @@ void render() {
     glVertex3f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,DEPTH_MIN);
     glVertex3f(0.0,SCREEN_HEIGHT/2,DEPTH_MIN);
   glEnd();
-
+*/
  outPosition();
  glPopMatrix();
  //glTranslatef(SCREEN_WIDTH/2.f,SCREEN_HEIGHT/2.f,1.f);
@@ -244,6 +182,7 @@ bool loadMedia() {return true;}
 
 
 void handleKeys(unsigned char key, int x, int y) {
+  //(gameContext._userContext._input)->handleInput(key);
   if (key == 'w') {Camera.z += 16.f;}
   else if (key == 's') {Camera.z -= 16.f;}
   else if (key == 'a') {Camera.x -= 16.f;}
@@ -272,12 +211,131 @@ void handleKeys(unsigned char key, int x, int y) {
 }
 
 
-void initAll(int argv, char* argc[]) {
+GLchar* getShaderSourceCode(const std::string& filename) {
+  std::ifstream file (filename.c_str());
  
-  generateParticles(holder[0], 0.0, -1.0, 0.0);
-  generateParticles(holder[1], -1.0, -1.0, 0.0);
-  generateParticles(holder[2], 0, 0.0, -1.0);
-  generateParticles(holder[3], -1.0, 0, 0);
+  printf("opening file: %s\n", filename.c_str());
+  
+  if (!file) {
+    printf("Opening file failed\n"); 
+  }
+    file.seekg(0, file.end);
+    int length = file.tellg();
+    file.seekg(0, file.beg);
+    
+    printf("Length: %i\n", length);
+    GLchar* buffer = new char[length]();
+ 
+    file.read(buffer,length);
+
+    //printf("buffer: %s\n", buffer);
+    file.close();
+    return buffer; 
+}
+
+
+bool initGL() {
+  GLenum error;
+  glViewport(0.f,0.f,SCREEN_WIDTH,SCREEN_HEIGHT);
+  
+  GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+  GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+  std::string vName = "shaders/main.vert";
+  std::string fName = "shaders/main.frag";
+  
+  const GLchar* vertexShaderName = getShaderSourceCode(vName);
+  const GLchar* fragmentShaderName = getShaderSourceCode(fName);
+
+  glShaderSource(vertexShaderID, 1, &vertexShaderName, 0);
+  glShaderSource(fragmentShaderID, 1, &fragmentShaderName, 0); 
+  
+  glCompileShader(vertexShaderID);
+  glCompileShader(fragmentShaderID);
+
+  GLint isCompiled = 0;
+  glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &isCompiled);
+  if (isCompiled == GL_FALSE) {
+    printf("Vertex Shader Compilation Failed!\n");
+    GLint maxLength = 0;
+    glGetShaderiv(vertexShaderID, GL_INFO_LOG_LENGTH, &maxLength);
+
+    GLchar* infoLog = new GLchar[maxLength];
+    glGetShaderInfoLog(vertexShaderID, maxLength, &maxLength, infoLog);
+
+    printf("Could not compile: %s\n", infoLog);
+  }
+  
+  glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &isCompiled);
+  if (isCompiled == GL_FALSE) {
+    printf("Fragment Shader Compilation Failed!\n");
+    GLint maxLength = 0;
+    glGetShaderiv(fragmentShaderID, GL_INFO_LOG_LENGTH, &maxLength);
+
+    GLchar* infoLog = new GLchar[maxLength];
+    glGetShaderInfoLog(fragmentShaderID, maxLength, &maxLength, infoLog);
+
+    printf("Could not compile: %s\n", infoLog);
+  }
+
+  GLuint programID = glCreateProgram();
+
+  glAttachShader(programID, vertexShaderID);
+  glAttachShader(programID, fragmentShaderID);
+
+  glLinkProgram(programID);
+ 
+  GLint isLinked;
+
+  glGetProgramiv(programID, GL_LINK_STATUS, &isLinked);
+  if(!isLinked)
+  {
+    printf("Program not linked correctly!\n"); 
+    GLint maxLength = 0;
+    glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
+
+    GLchar* infoLog = new GLchar[maxLength];
+    glGetProgramInfoLog(vertexShaderID, maxLength, &maxLength, infoLog);
+    printf("%s", infoLog);
+ }
+ 
+  glUseProgram(programID);
+
+  error = glGetError();
+  if(error != GL_NO_ERROR) { 
+    printf("Error initializing OpenGL! %s\n",gluErrorString(error));
+  } 
+  
+  
+  // Projection Matrix
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glFrustum(-SCREEN_WIDTH/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, -SCREEN_HEIGHT/2, CLIPPING_DEPTH_MIN, CLIPPING_DEPTH_MAX);
+  
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+   
+  glPushMatrix();
+
+  glClearColor(0.f,0.f,0.f,1.f);
+  glEnable(GL_TEXTURE_2D);
+  glEnable(GL_DEPTH_TEST);
+  //glDepthFunc(GL_GREATER);
+
+ error = glGetError();
+  if(error != GL_NO_ERROR) { 
+    printf("Error initializing OpenGL! %s\n",gluErrorString(error));
+    return false;
+  } 
+  return true;
+}
+
+void initAll(int argv, char* argc[]) {
+
+  generateParticles(holder[0],  0.0, -1.0,  0.0);
+  generateParticles(holder[1], -1.0, -1.0,  0.0);
+  generateParticles(holder[2],  0.0,  0.0, -1.0);
+  generateParticles(holder[3], -1.0,  0.0,  0.0);
   
   // GLUT INITIALIZATION
   glutInit(&argv,argc);
@@ -287,6 +345,11 @@ void initAll(int argv, char* argc[]) {
   glutInitContextVersion(2,1);
   glutInitDisplayMode(GLUT_DOUBLE);
 
+  GLenum err = glewInit();
+  if (GLEW_OK != err) {
+    printf("issues initializing GLEW: %s\n", glewGetErrorString(err) );
+  }
+  
   // INITIALIZE OPENGL AND LOADMEDIA
   if (!initGL()) printf("Cannot initialize OpenGL!");
   if (!loadMedia()) printf("Cannot load media!\n"); 
@@ -295,7 +358,6 @@ void initAll(int argv, char* argc[]) {
   glutDisplayFunc(render);
   glutTimerFunc(1000 / SCREEN_FPS,runMainLoop,0);
   glutMainLoop();
-
 }
 
 
