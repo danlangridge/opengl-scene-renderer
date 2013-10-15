@@ -1,7 +1,7 @@
 #pragma once
 
-#include "gl_libs.h"
-#include "Particle.h"
+#include <gl_libs.h>
+#include <Particle.h>
 
 class Sprite : public Particle {
   public:

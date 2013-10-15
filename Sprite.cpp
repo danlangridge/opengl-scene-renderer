@@ -1,5 +1,5 @@
 #include "Sprite.h"
-
+#include <statics.h>
 #define DEBUG_RENDER 0
 
     Sprite::Sprite() {
