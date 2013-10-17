@@ -1,3 +1,4 @@
+#pragma once
 #include <Vector.h>
 #include <PFholder.h>
 
@@ -24,7 +25,7 @@ static Vector Camera;
 
 static PFholder* holder = new PFholder[4];
 
-static GameContext gameContext;
+static GameContext* gameContext = new GameContext();
 
 static const int NUM_SPRITES = 50;
 

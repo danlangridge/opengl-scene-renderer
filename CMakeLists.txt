@@ -30,9 +30,9 @@ target_link_libraries(Renderer Gravel ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} GLEW G
 add_library( Graphics STATIC
   KeyInput.cpp
   UserContext.cpp
+  GraphicsContext.cpp
   GameContext.cpp
-)
-
+) 
 add_library( Game STATIC
   Sprite.cpp
 )

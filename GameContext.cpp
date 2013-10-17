@@ -1,6 +1,7 @@
 #include <GameContext.h>
 
 GameContext::GameContext()
-  :_userContext()
+  :_graphicsContext(),
+   _userContext()
   {}
 

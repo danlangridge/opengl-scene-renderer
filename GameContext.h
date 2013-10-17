@@ -1,10 +1,12 @@
 #pragma once
 #include <UserContext.h>
+#include <GraphicsContext.h>
 
 class GameContext {
 public:
-  UserContext _userContext;
-
+  GraphicsContext* _graphicsContext; 
+  UserContext* _userContext;
+  
   GameContext();
 
 };

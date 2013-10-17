@@ -180,155 +180,10 @@ void render() {
 
 bool loadMedia() {return true;}
 
-
-void handleKeys(unsigned char key, int x, int y) {
-  //(gameContext._userContext._input)->handleInput(key);
-  if (key == 'w') {Camera.z += 16.f;}
-  else if (key == 's') {Camera.z -= 16.f;}
-  else if (key == 'a') {Camera.x -= 16.f;}
-  else if (key == 'd') {Camera.x += 16.f;}
-  else if (key == 'i') {Camera.y += 16.f;}
-  else if (key == 'j') {Camera.y -= 16.f;}
-  else if (key == 'g') {
-    for (unsigned i = 0; i < 4; i++) {
-      Vector* point = &(((ParticleGravity*)((holder[i].PFstorage[0])->generator))->g); 
-       point->x = -point->x;
-       point->y = -point->y;
-       point->z = -point->z;
-    }
-  } 
-  else if (key == 'q') {exit(0);}
-  else if (key == 'x') {rotatei++;}
-  else if (key == 'c') {rotatej++;}
-  else if (key == 'v') {rotatek++;}
-  else if (key == 'b') {rotatea++;}
-  else if (key == 'z') {rotatea = 0; rotatei = 0; rotatej = 0; rotatek = 0;}
-  glMatrixMode(GL_MODELVIEW);
-  glPopMatrix();
-  glLoadIdentity();
-  glTranslatef( Camera.x, Camera.y, Camera.z);
-  glPushMatrix();
+void handleKeys(unsigned char key, int x, int y) {  
+  gameContext->_userContext->_input->handleInput(key);
 }
 
-
-GLchar* getShaderSourceCode(const std::string& filename) {
-  std::ifstream file (filename.c_str());
- 
-  printf("opening file: %s\n", filename.c_str());
-  
-  if (!file) {
-    printf("Opening file failed\n"); 
-  }
-    file.seekg(0, file.end);
-    int length = file.tellg();
-    file.seekg(0, file.beg);
-    
-    printf("Length: %i\n", length);
-    GLchar* buffer = new char[length]();
- 
-    file.read(buffer,length);
-
-    //printf("buffer: %s\n", buffer);
-    file.close();
-    return buffer; 
-}
-
-
-bool initGL() {
-  GLenum error;
-  glViewport(0.f,0.f,SCREEN_WIDTH,SCREEN_HEIGHT);
-  
-  GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-  GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-
-  std::string vName = "shaders/main.vert";
-  std::string fName = "shaders/main.frag";
-  
-  const GLchar* vertexShaderName = getShaderSourceCode(vName);
-  const GLchar* fragmentShaderName = getShaderSourceCode(fName);
-
-  glShaderSource(vertexShaderID, 1, &vertexShaderName, 0);
-  glShaderSource(fragmentShaderID, 1, &fragmentShaderName, 0); 
-  
-  glCompileShader(vertexShaderID);
-  glCompileShader(fragmentShaderID);
-
-  GLint isCompiled = 0;
-  glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &isCompiled);
-  if (isCompiled == GL_FALSE) {
-    printf("Vertex Shader Compilation Failed!\n");
-    GLint maxLength = 0;
-    glGetShaderiv(vertexShaderID, GL_INFO_LOG_LENGTH, &maxLength);
-
-    GLchar* infoLog = new GLchar[maxLength];
-    glGetShaderInfoLog(vertexShaderID, maxLength, &maxLength, infoLog);
-
-    printf("Could not compile: %s\n", infoLog);
-  }
-  
-  glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &isCompiled);
-  if (isCompiled == GL_FALSE) {
-    printf("Fragment Shader Compilation Failed!\n");
-    GLint maxLength = 0;
-    glGetShaderiv(fragmentShaderID, GL_INFO_LOG_LENGTH, &maxLength);
-
-    GLchar* infoLog = new GLchar[maxLength];
-    glGetShaderInfoLog(fragmentShaderID, maxLength, &maxLength, infoLog);
-
-    printf("Could not compile: %s\n", infoLog);
-  }
-
-  GLuint programID = glCreateProgram();
-
-  glAttachShader(programID, vertexShaderID);
-  glAttachShader(programID, fragmentShaderID);
-
-  glLinkProgram(programID);
- 
-  GLint isLinked;
-
-  glGetProgramiv(programID, GL_LINK_STATUS, &isLinked);
-  if(!isLinked)
-  {
-    printf("Program not linked correctly!\n"); 
-    GLint maxLength = 0;
-    glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
-
-    GLchar* infoLog = new GLchar[maxLength];
-    glGetProgramInfoLog(vertexShaderID, maxLength, &maxLength, infoLog);
-    printf("%s", infoLog);
- }
- 
-  glUseProgram(programID);
-
-  error = glGetError();
-  if(error != GL_NO_ERROR) { 
-    printf("Error initializing OpenGL! %s\n",gluErrorString(error));
-  } 
-  
-  
-  // Projection Matrix
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glFrustum(-SCREEN_WIDTH/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, -SCREEN_HEIGHT/2, CLIPPING_DEPTH_MIN, CLIPPING_DEPTH_MAX);
-  
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-   
-  glPushMatrix();
-
-  glClearColor(0.f,0.f,0.f,1.f);
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_DEPTH_TEST);
-  //glDepthFunc(GL_GREATER);
-
- error = glGetError();
-  if(error != GL_NO_ERROR) { 
-    printf("Error initializing OpenGL! %s\n",gluErrorString(error));
-    return false;
-  } 
-  return true;
-}
 
 void initAll(int argv, char* argc[]) {
 
@@ -351,7 +206,7 @@ void initAll(int argv, char* argc[]) {
   }
   
   // INITIALIZE OPENGL AND LOADMEDIA
-  if (!initGL()) printf("Cannot initialize OpenGL!");
+  if (!gameContext->_graphicsContext->initGraphicsContext()) printf("Cannot initialize OpenGL!");
   if (!loadMedia()) printf("Cannot load media!\n"); 
   
   glutKeyboardFunc(handleKeys);
