@@ -32,7 +32,11 @@ add_library( Graphics STATIC
   UserContext.cpp
   GraphicsContext.cpp
   GameContext.cpp
-) 
+  GLContext.cpp
+)
+
+target_link_libraries(Graphics GLEW)
+
 add_library( Game STATIC
   Sprite.cpp
 )
