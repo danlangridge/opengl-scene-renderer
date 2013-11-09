@@ -1,5 +1,3 @@
-
-#include <GLContext.h>
 #include <statics.h>
 #include <Sprite.h>
 #include <gl_libs.h>
@@ -10,7 +8,6 @@
 #include <fstream>
 #include <cstdio>
 #include <cstdlib>
-
 
 #define ABS(x)  ((x <= 0) ? -x : x)  
 
@@ -34,6 +31,7 @@ void generateParticles(PFholder &ph, float x, float y, float z) {
     } 
 }
 
+
 void output(int x,int y, float r, float g, float b, char string[]) {
   glColor3f (r,g,b);
   glRasterPos2f(x,y);
@@ -43,6 +41,7 @@ void output(int x,int y, float r, float g, float b, char string[]) {
     glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
     }
 }
+
 
 void outPosition() {
   char* str;
@@ -104,11 +103,13 @@ void boundsCheck(PFholder &part) {
  }
 }
 
+
 void update() {
  for (unsigned i = 0; i < 4; i++) {
   boundsCheck(holder[i]);
  } 
 }
+
 
 void pfRender(PFholder &part) {
  for (std::vector<PFcontainer*>::iterator i = part.PFstorage.begin(); 
@@ -179,12 +180,6 @@ void render() {
   glutSwapBuffers();
 }
 
-bool loadMedia() {return true;}
-
-void handleKeys(unsigned char key, int x, int y) {  
-  gameContext->_userContext->_input->handleInput(key);
-}
-
 
 void initAll(int argv, char* argc[]) {
 
@@ -192,10 +187,10 @@ void initAll(int argv, char* argc[]) {
   generateParticles(holder[1], -1.0, -1.0,  0.0);
   generateParticles(holder[2],  0.0,  0.0, -1.0);
   generateParticles(holder[3], -1.0,  0.0,  0.0);
-  if (!InitGLContext(argv,argc)) {
-    printf("FAILED TO INITIALIZE GL CONTEXT!\n TERMINATING..\n"); 
-  }
+  
+  gameContext->InitGL(argv,argc);
 }
+
 
 int main(int argv, char* argc[]) {
   initAll(argv,argc);
