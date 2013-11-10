@@ -10,6 +10,9 @@ ADD_DEFINITIONS(
   -lGLEW
 )
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${RENDERER_SOURCE_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${RENDERER_SOURCE_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RENDERER_SOURCE_DIR}/bin)
 
 MESSAGE("Project Directory is: ${RENDERER_SOURCE_DIR}" )
 MESSAGE("GLEW Directory is: ${GLEW_LIBRARIES}" )
@@ -17,6 +20,7 @@ MESSAGE("GLEW Directory is: ${GLEW_LIBRARIES}" )
 include_directories(${RENDERER_SOURCE_DIR})
 include_directories(${RENDERER_SOURCE_DIR}/gravel-engine)
 include_directories(${RENDERER_SOURCE_DIR}/externals)
+
 link_directories(${RENDERER_SOURCE_DIR}/gravel-engine)
 
 add_subdirectory( ${RENDERER_SOURCE_DIR}/gravel-engine )
