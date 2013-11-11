@@ -1,8 +1,8 @@
 #include <GameContext.h>
 
 GameContext::GameContext()
-  :_graphicsContext(),
-   _userContext()
+  :_graphicsContext(new GraphicsContext()),
+   _userContext(new UserContext())
   {}
 
 void GameContext::Input(unsigned char key) {

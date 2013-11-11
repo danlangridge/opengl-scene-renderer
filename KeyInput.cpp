@@ -5,6 +5,7 @@
 
 void KeyInput::handleInput(const unsigned char& key) {
  
+ printf("KEY RECEIVED: PROCESSING"); 
  if (key == 'w') {Camera.z += 16.f;}
   else if (key == 's') {Camera.z -= 16.f;}
   else if (key == 'a') {Camera.x -= 16.f;}

@@ -1,6 +1,6 @@
 #pragma once
 #include <UserState.h>
-#include <Input.h>
+#include <KeyInput.h>
 
 enum {
     PLAYER,
@@ -10,7 +10,7 @@ enum {
 
 class UserContext {
 public:
-  Input*  _input; 
+  KeyInput*  _input; 
   UserState* _userState;
 
   UserContext();
