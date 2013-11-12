@@ -139,7 +139,7 @@ void render() {
  glPopMatrix();
 
   // Generate Pointer 
-  glPushMatrix();
+ glPushMatrix();
   //glLoadIdentity();
   //glTranslatef(SCREEN_WIDTH/2.f,SCREEN_HEIGHT/2.f, 0.11);
  drawAxis();

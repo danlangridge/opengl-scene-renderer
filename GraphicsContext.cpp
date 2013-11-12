@@ -139,9 +139,11 @@ void handleKeys(unsigned char key, int x, int y) {
   gameContext->KeyInput(key);
 }
 
+
 void handleMouse(int x, int y) {
   gameContext->MouseInput(x,y);
 }
+
 
 extern void render();
 extern void update();
