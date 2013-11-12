@@ -34,6 +34,7 @@ target_link_libraries(Renderer Gravel ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} GLEW G
 
 add_library( Graphics STATIC
   KeyInput.cpp
+  MouseInput.cpp
   UserContext.cpp
   GraphicsContext.cpp
   GameContext.cpp

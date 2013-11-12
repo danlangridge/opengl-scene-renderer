@@ -1,6 +1,7 @@
 #pragma once
 #include <UserState.h>
 #include <KeyInput.h>
+#include <MouseInput.h>
 
 enum {
     PLAYER,
@@ -10,8 +11,9 @@ enum {
 
 class UserContext {
 public:
-  KeyInput*  _input; 
   UserState* _userState;
+  KeyInput*  _keyInput; 
+  MouseInput*  _mouseInput; 
 
   UserContext();
 };

@@ -2,6 +2,8 @@
 #include <KeyInput.h>
 
 UserContext::UserContext()
- :_input(new KeyInput()), _userState(new UserState())
+ : _userState(new UserState()), 
+   _keyInput(new KeyInput()),
+   _mouseInput(new MouseInput())
  {}
 

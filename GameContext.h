@@ -11,7 +11,8 @@ public:
    * Passes Input to UserContext
    *
    */
-  void Input(unsigned char key);
+  void KeyInput(unsigned char key);
+  void MouseInput(int x, int y);
  
   /** 
    * Starts Initializes The Graphics Context

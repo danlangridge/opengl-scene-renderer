@@ -5,8 +5,12 @@ GameContext::GameContext()
    _userContext(new UserContext())
   {}
 
-void GameContext::Input(unsigned char key) {
-  this->_userContext->_input->handleInput(key);
+void GameContext::KeyInput(unsigned char key) {
+  this->_userContext->_keyInput->handleInput(key);
+}
+
+void GameContext::MouseInput(int x, int y) {
+  this->_userContext->_mouseInput->handleMouse(x,y);
 }
 
 void GameContext::InitGL(int argv, char* argc[]) {

@@ -136,9 +136,12 @@ bool loadMedia() {return true;}
 
 
 void handleKeys(unsigned char key, int x, int y) {  
-  gameContext->Input(key);
+  gameContext->KeyInput(key);
 }
 
+void handleMouse(int x, int y) {
+  gameContext->MouseInput(x,y);
+}
 
 extern void render();
 extern void update();
@@ -176,6 +179,7 @@ bool GraphicsContext::InitGLHelperLibraries(int argv, char* argc[]) {
   if (!loadMedia()) printf("Cannot load media!\n"); 
   
   glutKeyboardFunc(handleKeys);
+  glutMotionFunc(handleMouse);
   glutDisplayFunc(render);
   glutTimerFunc(1000 / SCREEN_FPS,runMainLoop,0);
   glutMainLoop();
