@@ -4,6 +4,7 @@
 #include <fstream>
 #include <statics.h>
 
+
 GraphicsContext::GraphicsContext()
   :_program(0),
    _fragmentShader(0),
@@ -107,6 +108,7 @@ bool GraphicsContext::initGraphicsContext() {
   } 
   return true;
 }
+
 
 GLchar* GraphicsContext::getShaderSourceCode(const std::string& filename) {
   std::ifstream file (filename.c_str());

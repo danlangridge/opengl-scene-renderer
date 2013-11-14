@@ -18,11 +18,6 @@ static const int SCREEN_FPS = 60;
 
 static float rotatei = 0, rotatej = 0, rotatek = 0, rotatea = 0;
 
-static GLfloat gCameraX = 0.f;
-static GLfloat gCameraY = 0.f;
-static GLfloat gCameraZ = 0.f;
-static Vector Camera;
-
 static PFholder* holder = new PFholder[4];
 
 static GameContext* gameContext = new GameContext();

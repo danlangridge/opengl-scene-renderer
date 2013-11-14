@@ -39,6 +39,7 @@ add_library( Graphics STATIC
   GraphicsContext.cpp
   GameContext.cpp
   Object.cpp
+  Camera.cpp
 )
 
 target_link_libraries( Graphics GLEW )

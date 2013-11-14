@@ -20,6 +20,8 @@ public:
    */
   void InitGL(int argv, char* argc[]);
 
+  UserContext* getUserContext();
+
 protected:
   
   GraphicsContext* _graphicsContext; 

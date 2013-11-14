@@ -5,6 +5,10 @@ GameContext::GameContext()
    _userContext(new UserContext())
   {}
 
+UserContext* GameContext::getUserContext() {
+  return _userContext;
+}
+
 void GameContext::KeyInput(unsigned char key) {
   this->_userContext->_keyInput->handleInput(key);
 }

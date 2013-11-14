@@ -4,17 +4,19 @@
 
 
 void KeyInput::handleInput(const unsigned char& key) {
- 
- printf("KEY RECEIVED: PROCESSING"); 
- if (key == 'w') {Camera.z += 16.f;}
-  else if (key == 's') {Camera.z -= 16.f;}
-  else if (key == 'a') {Camera.x -= 16.f;}
-  else if (key == 'd') {Camera.x += 16.f;}
-  else if (key == 'i') {Camera.y += 16.f;}
-  else if (key == 'j') {Camera.y -= 16.f;}
+
+ UserContext* userContext = gameContext->getUserContext();
+ if (key == 'w') {userContext->Move(0,0,16);}
+  else if (key == 's') {userContext->Move(0,0,-16);}
+  else if (key == 'a') {userContext->Move(16,0,0);}
+  else if (key == 'd') {userContext->Move(-16,0,0);}
+  else if (key == 'i') {userContext->Move(0,16,0);}
+  else if (key == 'j') {userContext->Move(0,16,0);}
   else if (key == 'g') {
     for (unsigned i = 0; i < 4; i++) {
-      Vector* point = &(((ParticleGravity*)((holder[i].PFstorage[0])->generator))->g); 
+       ((ParticleGravity*)holder[i].PFstorage[0]->generator)->g; 
+       Vector* point = new Vector(); 
+       //Vector* point = &(((ParticleGravity*)((holder[i].PFstorage[0])->generator))->g); 
        point->x = -point->x;
        point->y = -point->y;
        point->z = -point->z;
@@ -31,7 +33,11 @@ void KeyInput::handleInput(const unsigned char& key) {
   glMatrixMode(GL_MODELVIEW);
   glPopMatrix();
   glLoadIdentity();
-  glTranslatef( Camera.x, Camera.y, Camera.z);
+
+  Vector position = userContext->getPosition();
+  glTranslatef(position.x, 
+               position.y, 
+               position.z);
   glPushMatrix();
 }
 
