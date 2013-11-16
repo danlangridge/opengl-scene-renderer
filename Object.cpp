@@ -1,7 +1,7 @@
 #include <Object.h>
  
 Object::Object()
- :_position(), _direction(), _angle(0), _rotationPower(16,16,16)
+ :_position(), _orientation(), _rotationPower(16,16,16)
 {
 }
  
@@ -25,36 +25,28 @@ Vector Object::getPosition() {
 }
 
 
-GLfloat* Object::getRotation() {
- GLfloat* quaternion = new GLfloat[4];
- quaternion[0] = _angle;
- quaternion[1] = _direction.x;
- quaternion[2] = _direction.y;
- quaternion[3] = _direction.z;
- return quaternion;
+Quaternion Object::getRotation() {
+ return _orientation;
 }
 
 
 void Object::setRotation(GLfloat a, GLfloat x, GLfloat y, GLfloat z) {
- _angle = a;
- _direction.x = x;
- _direction.y = y;
- _direction.z = z;
+ _orientation = Quaternion(a,x,y,z);
 }
  
  
 void Object::rotateX() {
- _direction.x += _rotationPower.x;
+ _orientation.v.x += _rotationPower.x;
 }
 
  
 void Object::rotateY() {
- _direction.y += _rotationPower.y;
+ _orientation.v.y += _rotationPower.y;
 }
  
  
 void Object::rotateZ() {
- _direction.z += _rotationPower.z;
+ _orientation.v.z += _rotationPower.z;
 }
 
  

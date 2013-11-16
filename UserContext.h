@@ -24,8 +24,11 @@ public:
   
   MouseInput*  _mouseInput; 
 
+ /*
+  * Move function, defines movement of all objects associated with user i.e. Camera, Model etc
+  */
  void Move(float x, float y, float z);
+ 
  Vector getPosition();
  
-
 };

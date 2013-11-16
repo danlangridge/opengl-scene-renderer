@@ -8,6 +8,7 @@ UserContext::UserContext()
    _mouseInput(new MouseInput())
  {}
 
+ 
  void UserContext::Move(float x, float y, float z) {
   this->_camera->updatePosition(x,y,z);
  }

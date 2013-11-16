@@ -1,4 +1,5 @@
 #include <Vector.h>
+#include <Quaternion.h>
 
 /**
  * Generic class for physical objects within the world
@@ -16,7 +17,7 @@ public:
  
  Vector getPosition();
 
- GLfloat* getRotation();
+ Quaternion getRotation();
 
  void setRotation(GLfloat a, GLfloat x, GLfloat y, GLfloat z);
  
@@ -32,11 +33,8 @@ private:
  // Position of the Object in the world
  Vector _position;
  
- // Normalized Vector describing the direction of viewing
- // TODO: Make a Quaternion class to handle rotations 
- Vector _direction;
- GLfloat _angle;
- 
+ Quaternion _orientation;
+
  Vector _rotationPower;
 
 };

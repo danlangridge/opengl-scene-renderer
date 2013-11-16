@@ -31,7 +31,6 @@ add_executable (Renderer main.cpp ${EXTERNALS_SOURCE_FILES} ${RENDERER_SOURCE_DI
 
 target_link_libraries(Renderer Gravel ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} GLEW Graphics Game )
 
-
 add_library( Graphics STATIC
   KeyInput.cpp
   MouseInput.cpp
@@ -42,7 +41,7 @@ add_library( Graphics STATIC
   Camera.cpp
 )
 
-target_link_libraries( Graphics GLEW )
+target_link_libraries( Graphics GLEW Gravel )
 
 add_library( Game STATIC
   Sprite.cpp
