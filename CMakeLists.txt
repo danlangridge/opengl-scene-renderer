@@ -36,6 +36,7 @@ add_library( Graphics STATIC
   MouseInput.cpp
   UserContext.cpp
   GraphicsContext.cpp
+  PhysicsContext.cpp 
   GameContext.cpp
   Object.cpp
   Camera.cpp

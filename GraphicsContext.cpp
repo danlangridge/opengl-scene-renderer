@@ -137,16 +137,6 @@ GLchar* GraphicsContext::getShaderSourceCode(const std::string& filename) {
 bool loadMedia() {return true;}
 
 
-void handleKeys(unsigned char key, int x, int y) {  
-  gameContext->KeyInput(key);
-}
-
-
-void handleMouse(int x, int y) {
-  gameContext->MouseInput(x,y);
-}
-
-
 extern void render();
 extern void update();
 
@@ -158,6 +148,17 @@ void runMainLoop(int val) {
   glutTimerFunc(1000 / SCREEN_FPS,runMainLoop,val);
 }
 
+void handleKeys(unsigned char key, int x, int y) {
+gameContext->getUserContext()->_keyInput->handleInput(key,x,y);
+}
+
+void handleMouseMovement(int x, int y) {
+ gameContext->getUserContext()->_mouseInput->handleMouseMovement(x,y);
+}
+
+void handleMouseClick(int button, int state, int x, int y) {
+gameContext->getUserContext()->_mouseInput->handleMouseClick(button,state,x,y);
+}
 
 bool GraphicsContext::InitGLHelperLibraries(int argv, char* argc[]) {
 
@@ -183,7 +184,8 @@ bool GraphicsContext::InitGLHelperLibraries(int argv, char* argc[]) {
   if (!loadMedia()) printf("Cannot load media!\n"); 
   
   glutKeyboardFunc(handleKeys);
-  glutMotionFunc(handleMouse);
+  glutMotionFunc(handleMouseMovement);
+  glutMouseFunc(handleMouseClick); 
   glutDisplayFunc(render);
   glutTimerFunc(1000 / SCREEN_FPS,runMainLoop,0);
   glutMainLoop();

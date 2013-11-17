@@ -2,6 +2,7 @@
 
 GameContext::GameContext()
   :_graphicsContext(new GraphicsContext()),
+   _physicsContext(new PhysicsContext()), 
    _userContext(new UserContext())
   {}
 

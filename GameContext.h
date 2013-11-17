@@ -1,6 +1,7 @@
 #pragma once
 #include <UserContext.h>
 #include <GraphicsContext.h>
+#include <PhysicsContext.h>
 
 class GameContext {
 public:
@@ -25,6 +26,6 @@ public:
 protected:
   
   GraphicsContext* _graphicsContext; 
+  PhysicsContext* _physicsContext;
   UserContext* _userContext;
-
 };
