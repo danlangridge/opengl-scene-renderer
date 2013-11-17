@@ -3,7 +3,7 @@
 #include <KeyInput.h>
 
 
-void KeyInput::handleInput(const unsigned char& key) {
+void KeyInput::handleInput(unsigned char key, int x, int y) {
 
  UserContext* userContext = gameContext->getUserContext();
  if (key == 'w') {userContext->Move(0,0,16);}

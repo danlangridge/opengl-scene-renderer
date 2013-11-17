@@ -4,8 +4,8 @@
 MouseInput::MouseInput() {
 }
 
-void MouseInput::handleMouse(int x, int y) 
-{
+void MouseInput::handleMouseMovement(int x, int y)  {
 }
-void MouseInput::handleInput(const unsigned char& key) {
+
+void MouseInput::handleMouseClick(int button, int state, int x, int y) {
 }

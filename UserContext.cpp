@@ -1,5 +1,6 @@
 #include <UserContext.h>
 #include <KeyInput.h>
+#include <statics.h>
 
 UserContext::UserContext()
  : _userState(new UserState()), 
@@ -16,4 +17,8 @@ UserContext::UserContext()
 
  Vector UserContext::getPosition() {
   return _camera->getPosition();
+ }
+
+
+ void UserContext::Fire() {
  }

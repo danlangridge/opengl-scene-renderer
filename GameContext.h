@@ -11,7 +11,7 @@ public:
    * Passes Input to UserContext
    *
    */
-  void KeyInput(unsigned char key);
+  void KeyInput(unsigned char key, int x, int y);
   void MouseInput(int x, int y);
  
   /** 

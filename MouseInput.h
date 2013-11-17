@@ -5,7 +5,6 @@
 class MouseInput : public Input {
 public:
  MouseInput();
- void handleInput(const unsigned char& key);
- void handleMouse(int x, int y); 
-
+ void handleMouseMovement(int x, int y); 
+ void handleMouseClick(int button, int state, int x, int y);
 };

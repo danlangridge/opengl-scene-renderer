@@ -31,4 +31,6 @@ public:
  
  Vector getPosition();
  
+ void Fire();
+ 
 };

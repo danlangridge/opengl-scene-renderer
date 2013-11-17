@@ -5,5 +5,5 @@
 class KeyInput : public Input
 {
   public:
-  void handleInput(const unsigned char& key);
+  void handleInput(unsigned char key, int x, int y);
 };
