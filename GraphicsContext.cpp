@@ -138,26 +138,24 @@ GLchar* GraphicsContext::getShaderSourceCode(const std::string& filename) {
 bool loadMedia() {return true;}
 
 
-#define ABS(x)  ((x <= 0) ? -x : x)  
+void drawAxis() {
+  glBegin(GL_LINES);
+    glColor3f(1,0,0);
+    glVertex3f(0,0,0);
+    glVertex3f(100,0,0);
+  glEnd();
 
-
-void generateParticles(PFholder &ph, float x, float y, float z) {
-  srand(10);
-  Vector grav = Vector(x, y, z);
-  ParticleGravity* g = new ParticleGravity(grav);
-  for (unsigned i = 0; i < NUM_SPRITES; i++) {
-    int temp = rand() % 5 + 5;
-    Sprite* s = new Sprite(temp,temp,temp);
-    s->setColor( ABS(x), ABS(y), ABS(z));
-    s->d = (float)(999 - (rand() % 40))/999;
-    //s->d = 1;
-    (s->p).x = rand() % SCREEN_WIDTH;//(float)i;
-    (s->p).y = rand() % SCREEN_HEIGHT;//-(float)i;
-    (s->v).x = (float)i;
-    (s->v).y = (float)i;
-    (s->v).z = (float)i;
-    ph.add(s, g);
-    } 
+  glBegin(GL_LINES);
+    glColor3f(0,1,0);
+    glVertex3f(0,0,0);
+    glVertex3f(0,100,0);
+  glEnd();
+  
+  glBegin(GL_LINES);
+    glColor3f(0,0,1);
+    glVertex3f(0,0,0);
+    glVertex3f(0,0,100);
+  glEnd();
 }
 
 
@@ -184,68 +182,13 @@ void outPosition() {
 }
 
 
-void drawAxis() {
-  glBegin(GL_LINES);
-    glColor3f(1,0,0);
-    glVertex3f(0,0,0);
-    glVertex3f(100,0,0);
-  glEnd();
-
-  glBegin(GL_LINES);
-    glColor3f(0,1,0);
-    glVertex3f(0,0,0);
-    glVertex3f(0,100,0);
-  glEnd();
-  
-  glBegin(GL_LINES);
-    glColor3f(0,0,1);
-    glVertex3f(0,0,0);
-    glVertex3f(0,0,100);
-  glEnd();
-}
-
-
-void boundsCheck(PFholder &part) {
- part.updateForces(1); 
- 
- for (std::vector<PFcontainer*>::iterator i = part.PFstorage.begin(); 
-      i!= part.PFstorage.end(); i++) {
-     (*i)->particle->integrate(1);
-  if (((*i)->particle->p).x > SCREEN_WIDTH && ((*i)->particle->v).x > 0) {
-     ((*i)->particle->v).x = -((*i)->particle->v).x;
-  }
-  else if (((*i)->particle->p).x < 0 && ((*i)->particle->v).x < 0) {
-     ((*i)->particle->v).x = -((*i)->particle->v).x;
-  }
-  else if (((*i)->particle->p).y > SCREEN_HEIGHT && ((*i)->particle->v).y > 0) {
-     ((*i)->particle->v).y = -((*i)->particle->v).y;
-  }
-  else if (((*i)->particle->p).y < 0 && ((*i)->particle->v).y < 0) {
-     ((*i)->particle->v).y = -((*i)->particle->v).y;
-  }
-  else if (((*i)->particle->p).z > DEPTH_MAX/2 && ((*i)->particle->v).z > 0) {
-     ((*i)->particle->v).z = -((*i)->particle->v).z;
-  }
-  else if (((*i)->particle->p).z < DEPTH_MIN/2 && ((*i)->particle->v).z < 0) {
-     ((*i)->particle->v).z = -((*i)->particle->v).z;
-  }
- }
-}
-
-
-void update() {
- for (unsigned i = 0; i < 4; i++) {
-  boundsCheck(holder[i]);
- } 
-}
-
-
 void pfRender(PFholder &part) {
  for (std::vector<PFcontainer*>::iterator i = part.PFstorage.begin(); 
       i!= part.PFstorage.end(); i++) {
   (*i)->particle->render();
  }
 }
+
 extern void update();
 
 void render() {
@@ -262,9 +205,11 @@ void render() {
   glRotatef(rotatea, rotatei, rotatej, rotatek); 
   // Render Particles
   glPushMatrix();
+ 
  for (unsigned i = 0; i < 4; i++) {
   pfRender(holder[i]);
  } 
+ 
  glPopMatrix();
 
   // Generate Pointer 
