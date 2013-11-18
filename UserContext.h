@@ -1,5 +1,5 @@
 #pragma once
-#include <UserState.h>
+#include <User.h>
 #include <KeyInput.h>
 #include <MouseInput.h>
 #include <Camera.h>
@@ -13,10 +13,12 @@ enum {
 class UserContext {
 
 public:
-  
+
   UserContext();
   
-  UserState* _userState;
+  double _id; 
+  
+  User* _user;
   
   Camera* _camera;
   

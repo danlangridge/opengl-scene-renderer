@@ -3,7 +3,7 @@
 #include <statics.h>
 
 UserContext::UserContext()
- : _userState(new UserState()), 
+ : _user(), 
    _camera(new Camera()), 
    _keyInput(new KeyInput()),
    _mouseInput(new MouseInput())

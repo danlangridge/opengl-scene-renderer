@@ -42,7 +42,7 @@ add_library( Graphics STATIC
   Camera.cpp
 )
 
-target_link_libraries( Graphics GLEW Gravel )
+target_link_libraries( Graphics GLEW ${GLUT_LIBRARY} Gravel )
 
 add_library( Game STATIC
   Sprite.cpp
