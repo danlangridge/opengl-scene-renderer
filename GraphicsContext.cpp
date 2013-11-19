@@ -174,11 +174,10 @@ void outPosition() {
   char* str;
   std::string p;
   std::stringstream out;
-  //out << "POSITION X: " << Camera.x << " Y: " << Camera.y << " Z: " << Camera.z;
+  out << "POSITION X: " << " Y: " << " Z: ";
   p = out.str();
   str = (char*)(p.c_str());
   output(-SCREEN_WIDTH / 4.f, -SCREEN_HEIGHT / 4.f,1.f,1.f,0.f, str);
-  //printf("Position X: %f Y: %f\n", gCameraX, gCameraY);  
 }
 
 

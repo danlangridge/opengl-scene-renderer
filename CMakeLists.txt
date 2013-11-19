@@ -40,6 +40,7 @@ add_library( Graphics STATIC
   GameContext.cpp
   Object.cpp
   Camera.cpp
+  OBJLoader.cpp
 )
 
 target_link_libraries( Graphics GLEW ${GLUT_LIBRARY} Gravel )
