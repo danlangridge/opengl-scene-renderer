@@ -1,4 +1,6 @@
+#pragma once
 #include <Vector.h>
+#include <Mat4.h>
 #include <Object.h>
 
 /**
@@ -11,10 +13,18 @@ public:
 
  Camera();
 
+ /*
+  * set the projection matrix used for calculating the view 
+  */
+ Mat4 getProjectionMatrix();
+ void setProjectionMatrix(GLfloat near, GLfloat far, GLfloat fov);
+
 private: 
 
- uint _height;
- uint _width;
+ GLfloat _far;
+ GLfloat _near;
+ GLfloat _fov;
  GLfloat _focalPoint;
+ Mat4 _projection;
 
 };

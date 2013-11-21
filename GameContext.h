@@ -22,10 +22,10 @@ public:
   void InitGL(int argv, char* argc[]);
 
   UserContext* getUserContext();
+  GraphicsContext* _graphicsContext; 
 
 protected:
   
-  GraphicsContext* _graphicsContext; 
   PhysicsContext* _physicsContext;
   UserContext* _userContext;
 };

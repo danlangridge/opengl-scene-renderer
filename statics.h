@@ -5,6 +5,7 @@
 #include <GameContext.h>
 
 static const GLfloat change = 0.f;
+static const GLfloat PI = 3.1415;
 
 static const GLfloat CLIPPING_DEPTH_MIN = 100;
 static const GLfloat CLIPPING_DEPTH_MAX = 2000;

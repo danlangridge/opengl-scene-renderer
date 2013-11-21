@@ -5,6 +5,7 @@
 #include <statics.h>
 #include <Sprite.h>
 
+static Mat4 modelview = Mat4(), projection = Mat4();
 
 GraphicsContext::GraphicsContext()
   :_program(0),
@@ -91,6 +92,12 @@ bool GraphicsContext::initGraphicsContext() {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glFrustum(-SCREEN_WIDTH/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, -SCREEN_HEIGHT/2, CLIPPING_DEPTH_MIN, CLIPPING_DEPTH_MAX);
+
+  GLint program = gameContext->_graphicsContext->_program;
+  GLint projectionMatID;
+  // projectionMatID = glGetUniformLocation(program,"projectionMatrix");
+
+  // glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)projection.m);  
   
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -166,7 +173,7 @@ void output(int x,int y, float r, float g, float b, char string[]) {
   len = (int)strlen(string);
   for (i = 0; i < len; i++) {
     glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
-    }
+  }
 }
 
 
