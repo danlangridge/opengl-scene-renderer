@@ -2,6 +2,7 @@
 
 #include <gl_libs.h>
 #include <fstream>
+#include <sstream>
 #include <statics.h>
 #include <Sprite.h>
 
@@ -25,13 +26,20 @@ bool GraphicsContext::initGraphicsContext() {
 
   std::string vName = "shaders/main.vert";
   std::string fName = "shaders/main.frag";
-  
-  const GLchar* vertexShaderName = getShaderSourceCode(vName);
-  const GLchar* fragmentShaderName = getShaderSourceCode(fName);
+ 
+  std::string vShaderString = getShaderSourceCode(vName);
+  std::string fShaderString = getShaderSourceCode(fName);
 
-  glShaderSource(_vertexShader, 1, &vertexShaderName, 0);
-  glShaderSource(_fragmentShader, 1, &fragmentShaderName, 0); 
-  
+  const char* vertexShaderName = vShaderString.c_str();
+  const char* fragmentShaderName = fShaderString.c_str();
+
+  GLint vShaderSize = vShaderString.size();
+  GLint fShaderSize = fShaderString.size();
+   
+  glShaderSource(_vertexShader, 1, (const GLchar**)&vertexShaderName, (GLint*)&vShaderSize );
+  glShaderSource(_fragmentShader, 1, (const GLchar**)&fragmentShaderName, (GLint*)&fShaderSize); 
+ 
+  //printf("vShader:\n%s\nfShader:\n%s\n", vertexShaderName, fragmentShaderName);
   glCompileShader(_vertexShader);
   glCompileShader(_fragmentShader);
 
@@ -45,7 +53,7 @@ bool GraphicsContext::initGraphicsContext() {
     GLchar* infoLog = new GLchar[maxLength];
     glGetShaderInfoLog(_vertexShader, maxLength, &maxLength, infoLog);
 
-    printf("Could not compile: %s\n", infoLog);
+    printf("Could not compile: %s", infoLog);
   }
   
   glGetShaderiv(_fragmentShader, GL_COMPILE_STATUS, &isCompiled);
@@ -57,7 +65,7 @@ bool GraphicsContext::initGraphicsContext() {
     GLchar* infoLog = new GLchar[maxLength];
     glGetShaderInfoLog(_fragmentShader, maxLength, &maxLength, infoLog);
 
-    printf("Could not compile: %s\n", infoLog);
+    printf("Could not compile: %s", infoLog);
   }
 
   GLuint _program = glCreateProgram();
@@ -79,15 +87,10 @@ bool GraphicsContext::initGraphicsContext() {
     GLchar* infoLog = new GLchar[maxLength];
     glGetProgramInfoLog(_vertexShader, maxLength, &maxLength, infoLog);
     printf("%s", infoLog);
- }
+  }
  
   glUseProgram(_program);
-
-  error = glGetError();
-  if(error != GL_NO_ERROR) { 
-    //printf("Error initializing OpenGL! %s\n",gluErrorString(error));
-  } 
-    
+  
   // Projection Matrix
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -95,9 +98,9 @@ bool GraphicsContext::initGraphicsContext() {
 
   GLint program = gameContext->_graphicsContext->_program;
   GLint projectionMatID;
-  // projectionMatID = glGetUniformLocation(program,"projectionMatrix");
-
-  // glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)projection.m);  
+  std::string proMat = "projectionMatrix";
+  //projectionMatID = glGetUniformLocation(program,proMat.c_str());
+  //glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)projection.m);  
   
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -109,16 +112,16 @@ bool GraphicsContext::initGraphicsContext() {
   glEnable(GL_DEPTH_TEST);
   //glDepthFunc(GL_GREATER);
 
- error = glGetError();
+  error = glGetError();
   if(error != GL_NO_ERROR) { 
-    //printf("Error initializing OpenGL! %s\n",gluErrorString(error));
+    printf("Error initializing OpenGL! %s\n",gluErrorString(error));
     return false;
   } 
   return true;
 }
 
 
-GLchar* GraphicsContext::getShaderSourceCode(const std::string& filename) {
+std::string GraphicsContext::getShaderSourceCode(const std::string& filename) {
   std::ifstream file (filename.c_str());
  
   printf("opening file: %s\n", filename.c_str());
@@ -126,18 +129,12 @@ GLchar* GraphicsContext::getShaderSourceCode(const std::string& filename) {
   if (!file) {
     printf("Opening file failed\n"); 
   }
-    file.seekg(0, file.end);
-    int length = file.tellg();
-    file.seekg(0, file.beg);
-    
-    printf("Length: %i\n", length);
-    GLchar* buffer = new char[length]();
- 
-    file.read(buffer,length);
 
-    //printf("buffer: %s\n", buffer);
-    file.close();
-    return buffer; 
+  std::stringstream shaderData;
+  shaderData << file.rdbuf();
+   
+  file.close();
+  return shaderData.str();
 }
 
 
@@ -242,7 +239,7 @@ void render() {
     glVertex3f(SCREEN_WIDTH/2, 0.0,DEPTH_MIN);
     glVertex3f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,DEPTH_MIN);
     glVertex3f(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,0.0);
-  glEnd();
+ glEnd();
 
   glColor3f(0,0,1); 
   

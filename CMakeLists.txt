@@ -8,6 +8,7 @@ find_package(GLUT REQUIRED)
 
 ADD_DEFINITIONS(
   -lGLEW
+  -lGLU
 )
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${RENDERER_SOURCE_DIR}/lib)
@@ -32,10 +33,10 @@ add_executable (Renderer main.cpp ${EXTERNALS_SOURCE_FILES} ${RENDERER_SOURCE_DI
 target_link_libraries(Renderer Gravel ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} GLEW Graphics Game )
 
 add_library( Graphics STATIC
+  GraphicsContext.cpp
   KeyInput.cpp
   MouseInput.cpp
   UserContext.cpp
-  GraphicsContext.cpp
   PhysicsContext.cpp 
   GameContext.cpp
   Object.cpp
@@ -43,8 +44,10 @@ add_library( Graphics STATIC
   OBJLoader.cpp
 )
 
-target_link_libraries( Graphics GLEW ${GLUT_LIBRARY} Gravel )
+target_link_libraries( Graphics GLEW ${GLUT_LIBRARY} Gravel GLU )
 
 add_library( Game STATIC
   Sprite.cpp
 )
+
+target_link_libraries( Game GLEW ${GLUT_LIBRARY} Gravel Graphics )

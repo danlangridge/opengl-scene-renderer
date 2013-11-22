@@ -1,6 +1,6 @@
 #pragma once
 #include <gl_libs.h>
-
+#include <string.h>
 
 class GraphicsContext {
 public:
@@ -14,6 +14,6 @@ public:
   bool InitGLHelperLibraries(int argv, char* argc[]);
 
 private:
-  GLchar* getShaderSourceCode(const std::string& filename);
+  std::string getShaderSourceCode(const std::string& filename);
 
 };
