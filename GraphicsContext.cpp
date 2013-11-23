@@ -78,8 +78,7 @@ bool GraphicsContext::initGraphicsContext() {
   GLint isLinked;
 
   glGetProgramiv(_program, GL_LINK_STATUS, &isLinked);
-  if(!isLinked)
-  {
+  if(!isLinked) {
     printf("Program not linked correctly!\n"); 
     GLint maxLength = 0;
     glGetProgramiv(_program, GL_INFO_LOG_LENGTH, &maxLength);
@@ -89,23 +88,21 @@ bool GraphicsContext::initGraphicsContext() {
     printf("%s", infoLog);
   }
  
-  glUseProgram(_program);
-  
-  // Projection Matrix
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glFrustum(-SCREEN_WIDTH/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, -SCREEN_HEIGHT/2, CLIPPING_DEPTH_MIN, CLIPPING_DEPTH_MAX);
+  glUseProgram(_program);  
 
-  GLint program = gameContext->_graphicsContext->_program;
   GLint projectionMatID;
   std::string proMat = "projectionMatrix";
-  //projectionMatID = glGetUniformLocation(program,proMat.c_str());
-  //glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)projection.m);  
+  GLint modelMatID;
+  std::string modMat = "modelMatrix";
+  GLint viewMatID;
+  std::string viewMat = "viewMatrix";
   
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-   
-  glPushMatrix();
+  const char* p = proMat.c_str();
+
+  projectionMatID = glGetUniformLocation(_program, (const GLchar*)p);
+  printf("value: %i , %s\n", projectionMatID, p); 
+  
+  //glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)projection.m);   
 
   glClearColor(0.f,0.f,0.f,1.f);
   glEnable(GL_TEXTURE_2D);
@@ -196,64 +193,14 @@ extern void update();
 
 void render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glMatrixMode(GL_MODELVIEW);
-  glPushMatrix();
  
-  //Set Axis: y+ up, x+ right, z+ forward
-  //glRotatef(180,0,0,1);
+  for (unsigned i = 0; i < 4; i++) {
+   pfRender(holder[i]);
+  } 
   
-  //glLoadIdentity();
-  glTranslatef(-SCREEN_WIDTH/2,-SCREEN_HEIGHT/2, -CLIPPING_DEPTH_MIN-CENTER);
-  //glTranslatef(0,0,-CLIPPING_DEPTH_MIN);
-  glRotatef(rotatea, rotatei, rotatej, rotatek); 
-  // Render Particles
-  glPushMatrix();
- 
- for (unsigned i = 0; i < 4; i++) {
-  pfRender(holder[i]);
- } 
- 
- glPopMatrix();
-
-  // Generate Pointer 
- glPushMatrix();
-  //glLoadIdentity();
-  //glTranslatef(SCREEN_WIDTH/2.f,SCREEN_HEIGHT/2.f, 0.11);
- drawAxis();
- 
- //glLoadIdentity();
- /*
-  glColor3f(1,0,0); 
+  drawAxis(); 
+  outPosition();
   
-  glBegin(GL_QUADS);
-    glVertex3f(0.0,0.0,0.0);
-    glVertex3f(SCREEN_WIDTH/2, 0.0,0.0);
-    glVertex3f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,0.0);
-    glVertex3f(0.0,SCREEN_HEIGHT/2,0.0);
-  glEnd();
-
-  glColor3f(0,1,0); 
-  
-  glBegin(GL_QUADS);
-    glVertex3f(SCREEN_WIDTH/2,0.0,0.0);
-    glVertex3f(SCREEN_WIDTH/2, 0.0,DEPTH_MIN);
-    glVertex3f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,DEPTH_MIN);
-    glVertex3f(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,0.0);
- glEnd();
-
-  glColor3f(0,0,1); 
-  
-  glBegin(GL_QUADS);
-    glVertex3f(0.0,0.0,DEPTH_MIN);
-    glVertex3f(SCREEN_WIDTH/2, 0.0,DEPTH_MIN);
-    glVertex3f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,DEPTH_MIN);
-    glVertex3f(0.0,SCREEN_HEIGHT/2,DEPTH_MIN);
-  glEnd();
-*/
- outPosition();
- glPopMatrix();
- //glTranslatef(SCREEN_WIDTH/2.f,SCREEN_HEIGHT/2.f,1.f);
-  glPopMatrix();
   glutSwapBuffers();
 }
 
