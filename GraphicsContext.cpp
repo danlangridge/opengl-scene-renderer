@@ -16,6 +16,45 @@ GraphicsContext::GraphicsContext()
   {}
 
 
+bool checkShaderCompilation(const GLint &shader) {
+  
+  GLint isCompiled = 0;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+  
+  if (isCompiled == GL_FALSE) {
+    printf("Shader Compilation Failed!\n");
+    GLint maxLength = 0;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+    GLchar* infoLog = new GLchar[maxLength];
+    glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
+
+    printf("Could not compile: %s", infoLog);
+    return false; 
+  }
+  return true;
+}
+
+bool linkProgram(const GLint &program) {
+  
+  glLinkProgram(program);
+ 
+  GLint isLinked;
+
+  glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
+  if(!isLinked) {
+    printf("Program not linked correctly!\n"); 
+    GLint maxLength = 0;
+    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
+
+    GLchar* infoLog = new GLchar[maxLength];
+    glGetProgramInfoLog(program, maxLength, &maxLength, infoLog);
+    printf("%s", infoLog);
+    return false; 
+  }
+  return true; 
+}
+
 bool GraphicsContext::initGraphicsContext() {
 
   GLenum error;
@@ -40,69 +79,38 @@ bool GraphicsContext::initGraphicsContext() {
   glShaderSource(_fragmentShader, 1, (const GLchar**)&fragmentShaderName, (GLint*)&fShaderSize); 
  
   //printf("vShader:\n%s\nfShader:\n%s\n", vertexShaderName, fragmentShaderName);
-  glCompileShader(_vertexShader);
-  glCompileShader(_fragmentShader);
-
-  GLint isCompiled = 0;
-  glGetShaderiv(_vertexShader, GL_COMPILE_STATUS, &isCompiled);
-  if (isCompiled == GL_FALSE) {
-    printf("Vertex Shader Compilation Failed!\n");
-    GLint maxLength = 0;
-    glGetShaderiv(_vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-    GLchar* infoLog = new GLchar[maxLength];
-    glGetShaderInfoLog(_vertexShader, maxLength, &maxLength, infoLog);
-
-    printf("Could not compile: %s", infoLog);
-  }
   
-  glGetShaderiv(_fragmentShader, GL_COMPILE_STATUS, &isCompiled);
-  if (isCompiled == GL_FALSE) {
-    printf("Fragment Shader Compilation Failed!\n");
-    GLint maxLength = 0;
-    glGetShaderiv(_fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-    GLchar* infoLog = new GLchar[maxLength];
-    glGetShaderInfoLog(_fragmentShader, maxLength, &maxLength, infoLog);
-
-    printf("Could not compile: %s", infoLog);
-  }
-
+  glCompileShader(_vertexShader);
+  checkShaderCompilation(_vertexShader); 
+  
+  glCompileShader(_fragmentShader);
+  checkShaderCompilation(_fragmentShader); 
+  
   GLuint _program = glCreateProgram();
-
+  
   glAttachShader(_program, _vertexShader);
   glAttachShader(_program, _fragmentShader);
-
-  glLinkProgram(_program);
- 
-  GLint isLinked;
-
-  glGetProgramiv(_program, GL_LINK_STATUS, &isLinked);
-  if(!isLinked) {
-    printf("Program not linked correctly!\n"); 
-    GLint maxLength = 0;
-    glGetProgramiv(_program, GL_INFO_LOG_LENGTH, &maxLength);
-
-    GLchar* infoLog = new GLchar[maxLength];
-    glGetProgramInfoLog(_vertexShader, maxLength, &maxLength, infoLog);
-    printf("%s", infoLog);
-  }
+  
+  linkProgram(_program);
  
   glUseProgram(_program);  
 
-  GLint projectionMatID;
   std::string proMat = "projectionMatrix";
-  GLint modelMatID;
   std::string modMat = "modelMatrix";
-  GLint viewMatID;
   std::string viewMat = "viewMatrix";
+  GLint projectionMatID, modelMatID, viewMatID;
   
-  const char* p = proMat.c_str();
+  //projectionMatID = glGetUniformLocation(_program, (const GLchar*)proMat.c_str());
+  //projectionMatID = glGetUniformLocation(_program, (const GLchar*)modelMatID.c_str()); 
+  //projectionMatID = glGetUniformLocation(_program, (const GLchar*)viewMatID.c_str());
+  
+  printf("value: %i", projectionMatID); 
+ 
+  Mat4 model, view;
 
-  projectionMatID = glGetUniformLocation(_program, (const GLchar*)p);
-  printf("value: %i , %s\n", projectionMatID, p); 
-  
   //glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)projection.m);   
+  //glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)model);   
+  //glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)view);   
 
   glClearColor(0.f,0.f,0.f,1.f);
   glEnable(GL_TEXTURE_2D);
