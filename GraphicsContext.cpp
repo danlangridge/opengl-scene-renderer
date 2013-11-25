@@ -7,6 +7,8 @@
 #include <Sprite.h>
 
 static Mat4 modelview = Mat4(), projection = Mat4();
+static GLuint vertexArray[1];
+
 
 GraphicsContext::GraphicsContext()
   :_program(0),
@@ -55,6 +57,16 @@ bool linkProgram(const GLint &program) {
   return true; 
 }
 
+void setupBuffers() {
+  glGenVertexArrays(1, vertexArray);
+  glBindVertexArray(vertexArray[0]);
+
+  GLuint buffers[2];
+  glGenBuffers(2,buffers);
+  glBindBuffer(GL_ARRAY_BUFFER, buffers[0]); 
+}
+
+
 bool GraphicsContext::initGraphicsContext() {
 
   GLenum error;
@@ -94,29 +106,27 @@ bool GraphicsContext::initGraphicsContext() {
   linkProgram(_program);
  
   glUseProgram(_program);  
-
-  std::string proMat = "projectionMatrix";
-  std::string modMat = "modelMatrix";
-  std::string viewMat = "viewMatrix";
-  GLint projectionMatID, modelMatID, viewMatID;
   
-  //projectionMatID = glGetUniformLocation(_program, (const GLchar*)proMat.c_str());
-  //projectionMatID = glGetUniformLocation(_program, (const GLchar*)modelMatID.c_str()); 
-  //projectionMatID = glGetUniformLocation(_program, (const GLchar*)viewMatID.c_str());
+  const char* proMat = "projectionMatrix\0";
+  const char* viewMat = "viewMatrix\0";
+  GLint projectionMatID, viewMatID;
   
-  printf("value: %i", projectionMatID); 
- 
-  Mat4 model, view;
+  projectionMatID = glGetUniformLocation(_program, (const GLchar*)proMat);
+  viewMatID = glGetUniformLocation(_program, (const GLchar*)viewMat);
+  
+  printf("ID: %i %i\n", projectionMatID, viewMatID); 
+  
+  Mat4 view;
 
-  //glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)projection.m);   
-  //glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)model);   
-  //glUniformMatrix4fv(projectionMatID, 16, GL_FALSE, (GLfloat *)view);   
+  glUniformMatrix4fv(projectionMatID, 1, GL_FALSE, (GLfloat *)projection.m);   
+  glUniformMatrix4fv(viewMatID, 1, GL_FALSE, (GLfloat *)view.m);   
 
   glClearColor(0.f,0.f,0.f,1.f);
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_DEPTH_TEST);
   //glDepthFunc(GL_GREATER);
 
+  setupBuffers();
   error = glGetError();
   if(error != GL_NO_ERROR) { 
     printf("Error initializing OpenGL! %s\n",gluErrorString(error));
@@ -209,6 +219,10 @@ void render() {
   drawAxis(); 
   outPosition();
   
+
+  glBindVertexArray(vertexArray[0]);
+  glDrawArrays(GL_TRIANGLES,0,3);
+
   glutSwapBuffers();
 }
 

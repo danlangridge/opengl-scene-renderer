@@ -12,7 +12,7 @@ public:
   GraphicsContext();
   bool initGraphicsContext();
   bool InitGLHelperLibraries(int argv, char* argc[]);
-
+  
 private:
   std::string getShaderSourceCode(const std::string& filename);
 
