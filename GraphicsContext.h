@@ -14,6 +14,8 @@ public:
   bool InitGLHelperLibraries(int argv, char* argc[]);
   
 private:
-  std::string getShaderSourceCode(const std::string& filename);
-
+ std::string getShaderSourceCode(const std::string& filename);
+ void setupBuffers(); 
+ void setupShaders();
+ bool linkProgram();
 };

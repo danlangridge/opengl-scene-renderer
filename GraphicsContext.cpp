@@ -8,7 +8,7 @@
 
 static Mat4 modelview = Mat4(), projection = Mat4();
 static GLuint vertexArray[1];
-
+static GLfloat vertices;
 
 GraphicsContext::GraphicsContext()
   :_program(0),
@@ -16,6 +16,18 @@ GraphicsContext::GraphicsContext()
    _vertexShader(0),
    _texture(0)
   {}
+
+
+bool checkGLError(std::string function) {
+
+  GLenum error;
+  error = glGetError(); 
+  if(error != GL_NO_ERROR) { 
+    printf("OpenGL Error!\n%s: %s\n",function.c_str(), gluErrorString(error));
+    return false;
+  } 
+  return true;
+}
 
 
 bool checkShaderCompilation(const GLint &shader) {
@@ -32,49 +44,42 @@ bool checkShaderCompilation(const GLint &shader) {
     glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
 
     printf("Could not compile: %s", infoLog);
+    checkGLError(__FUNCTION__);
     return false; 
   }
+  checkGLError(__FUNCTION__);
   return true;
 }
 
-bool linkProgram(const GLint &program) {
+
+bool GraphicsContext::linkProgram() {
   
-  glLinkProgram(program);
+  glLinkProgram(_program);
  
   GLint isLinked;
 
-  glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
+  glGetProgramiv(_program, GL_LINK_STATUS, &isLinked);
   if(!isLinked) {
     printf("Program not linked correctly!\n"); 
     GLint maxLength = 0;
-    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
+    glGetProgramiv(_program, GL_INFO_LOG_LENGTH, &maxLength);
 
     GLchar* infoLog = new GLchar[maxLength];
-    glGetProgramInfoLog(program, maxLength, &maxLength, infoLog);
+    glGetProgramInfoLog(_program, maxLength, &maxLength, infoLog);
     printf("%s", infoLog);
+    checkGLError(__FUNCTION__);
     return false; 
   }
-  return true; 
-}
-
-void setupBuffers() {
-  glGenVertexArrays(1, vertexArray);
-  glBindVertexArray(vertexArray[0]);
-
-  GLuint buffers[2];
-  glGenBuffers(2,buffers);
-  glBindBuffer(GL_ARRAY_BUFFER, buffers[0]); 
+  checkGLError(__FUNCTION__);
+  return true;
 }
 
 
-bool GraphicsContext::initGraphicsContext() {
+void GraphicsContext::setupShaders() {
 
-  GLenum error;
-  glViewport(0.f,0.f,SCREEN_WIDTH,SCREEN_HEIGHT);
+   _vertexShader = glCreateShader(GL_VERTEX_SHADER);
+   _fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
   
-  GLuint _vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  GLuint _fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
   std::string vName = "shaders/main.vert";
   std::string fName = "shaders/main.frag";
  
@@ -98,14 +103,11 @@ bool GraphicsContext::initGraphicsContext() {
   glCompileShader(_fragmentShader);
   checkShaderCompilation(_fragmentShader); 
   
-  GLuint _program = glCreateProgram();
-  
-  glAttachShader(_program, _vertexShader);
-  glAttachShader(_program, _fragmentShader);
-  
-  linkProgram(_program);
- 
-  glUseProgram(_program);  
+  checkGLError(__FUNCTION__);
+}
+
+
+void GraphicsContext::setupBuffers() {
   
   const char* proMat = "projectionMatrix\0";
   const char* viewMat = "viewMatrix\0";
@@ -120,19 +122,39 @@ bool GraphicsContext::initGraphicsContext() {
 
   glUniformMatrix4fv(projectionMatID, 1, GL_FALSE, (GLfloat *)projection.m);   
   glUniformMatrix4fv(viewMatID, 1, GL_FALSE, (GLfloat *)view.m);   
+  
+  glGenVertexArrays(1, vertexArray);
+  glBindVertexArray(vertexArray[0]);
+
+  GLuint buffers[2];
+  glGenBuffers(2,buffers);
+  glBindBuffer(GL_ARRAY_BUFFER, buffers[0]); 
+  //glEnableVertexAttribArray();
+  //glVertexAttribPointer( , 4, GL_FLOAT, 0,0,0);
+  checkGLError(__FUNCTION__);
+}
+
+
+bool GraphicsContext::initGraphicsContext() {
+   
+  _program = glCreateProgram();
+  
+  setupShaders();
+  
+  glAttachShader(_program, _vertexShader);
+  glAttachShader(_program, _fragmentShader);
+    
+  linkProgram();
+  
+  glUseProgram(_program);  
+  
+  setupBuffers();
 
   glClearColor(0.f,0.f,0.f,1.f);
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_DEPTH_TEST);
   //glDepthFunc(GL_GREATER);
-
-  setupBuffers();
-  error = glGetError();
-  if(error != GL_NO_ERROR) { 
-    printf("Error initializing OpenGL! %s\n",gluErrorString(error));
-    return false;
-  } 
-  return true;
+  return checkGLError(__FUNCTION__);
 }
 
 
@@ -207,7 +229,9 @@ void pfRender(PFholder &part) {
  }
 }
 
+
 extern void update();
+
 
 void render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -234,17 +258,21 @@ void runMainLoop(int val) {
   glutTimerFunc(1000 / SCREEN_FPS,runMainLoop,val);
 }
 
+
 void handleKeys(unsigned char key, int x, int y) {
 gameContext->getUserContext()->_keyInput->handleInput(key,x,y);
 }
+
 
 void handleMouseMovement(int x, int y) {
  gameContext->getUserContext()->_mouseInput->handleMouseMovement(x,y);
 }
 
+
 void handleMouseClick(int button, int state, int x, int y) {
 gameContext->getUserContext()->_mouseInput->handleMouseClick(button,state,x,y);
 }
+
 
 bool GraphicsContext::InitGLHelperLibraries(int argv, char* argc[]) {
 
