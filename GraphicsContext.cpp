@@ -8,6 +8,7 @@
 
 static Mat4 modelview = Mat4(), projection = Mat4();
 static GLuint vertexArray[1];
+static GLuint vertexID;
 static GLfloat vertices;
 
 GraphicsContext::GraphicsContext()
@@ -18,7 +19,7 @@ GraphicsContext::GraphicsContext()
   {}
 
 
-bool checkGLError(std::string function) {
+bool checkGLError(const std::string& function) {
 
   GLenum error;
   error = glGetError(); 
@@ -43,7 +44,7 @@ bool checkShaderCompilation(const GLint &shader) {
     GLchar* infoLog = new GLchar[maxLength];
     glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
 
-    printf("Could not compile: %s", infoLog);
+    printf("Could not compile: %s\n", infoLog);
     checkGLError(__FUNCTION__);
     return false; 
   }
@@ -66,7 +67,7 @@ bool GraphicsContext::linkProgram() {
 
     GLchar* infoLog = new GLchar[maxLength];
     glGetProgramInfoLog(_program, maxLength, &maxLength, infoLog);
-    printf("%s", infoLog);
+    printf("%s\n", infoLog);
     checkGLError(__FUNCTION__);
     return false; 
   }
@@ -113,6 +114,8 @@ void GraphicsContext::setupBuffers() {
   const char* viewMat = "viewMatrix\0";
   GLint projectionMatID, viewMatID;
   
+  vertexID = glGetAttribLocation(_program,"position\0");
+  
   projectionMatID = glGetUniformLocation(_program, (const GLchar*)proMat);
   viewMatID = glGetUniformLocation(_program, (const GLchar*)viewMat);
   
@@ -129,8 +132,10 @@ void GraphicsContext::setupBuffers() {
   GLuint buffers[2];
   glGenBuffers(2,buffers);
   glBindBuffer(GL_ARRAY_BUFFER, buffers[0]); 
-  //glEnableVertexAttribArray();
-  //glVertexAttribPointer( , 4, GL_FLOAT, 0,0,0);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*4, NULL, GL_STREAM_DRAW);
+
+  glEnableVertexAttribArray(vertexID);
+  glVertexAttribPointer(vertexID , 4, GL_FLOAT, 0,0,0);
   checkGLError(__FUNCTION__);
 }
 
@@ -138,7 +143,7 @@ void GraphicsContext::setupBuffers() {
 bool GraphicsContext::initGraphicsContext() {
    
   _program = glCreateProgram();
-  
+
   setupShaders();
   
   glAttachShader(_program, _vertexShader);
@@ -148,12 +153,11 @@ bool GraphicsContext::initGraphicsContext() {
   
   glUseProgram(_program);  
   
+  
   setupBuffers();
 
   glClearColor(0.f,0.f,0.f,1.f);
-  glEnable(GL_TEXTURE_2D);
   glEnable(GL_DEPTH_TEST);
-  //glDepthFunc(GL_GREATER);
   return checkGLError(__FUNCTION__);
 }
 
