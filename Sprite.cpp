@@ -30,39 +30,32 @@
     }
     
     void Sprite::render() {
-      //glClearColor(0.f,0.f,0.f,1.f);
-      glColor3f(color[0],color[1],color[2]);
-      //glColor3f(1,0,0);
-      //printf("Render\n");
-      
-      glBegin(GL_QUADS);
-        glVertex3f(p.x-w, p.y+h, p.z+l);
-        glVertex3f(p.x+w, p.y+h, p.z+l);
-        glVertex3f(p.x+w, p.y-h, p.z+l);
-        glVertex3f(p.x-w, p.y-h, p.z+l);
-      glEnd();
+      GLfloat color[3] = { color[0],
+                           color[1],
+                           color[2]
+                         };
      
-     glBegin(GL_QUADS);
-        glVertex3f(p.x-w, p.y+h, p.z-l);
-        glVertex3f(p.x+w, p.y+h, p.z-l);
-        glVertex3f(p.x+w, p.y-h, p.z-l);
-        glVertex3f(p.x-w, p.y-h, p.z-l);
-      glEnd();
+      GLfloat cube[48] = {
+        p.x-w, p.y+h, p.z+l,
+        p.x+w, p.y+h, p.z+l,
+        p.x+w, p.y-h, p.z+l,
+        p.x-w, p.y-h, p.z+l,
      
-     glBegin(GL_QUADS);
-        glVertex3f(p.x+w, p.y+h, p.z+l);
-        glVertex3f(p.x+w, p.y+h, p.z-l);
-        glVertex3f(p.x+w, p.y-h, p.z-l);
-        glVertex3f(p.x+w, p.y-h, p.z+l);
-      glEnd();
+        p.x-w, p.y+h, p.z-l,
+        p.x+w, p.y+h, p.z-l,
+        p.x+w, p.y-h, p.z-l,
+        p.x-w, p.y-h, p.z-l,
      
-     glBegin(GL_QUADS);
-        glVertex3f(p.x-w, p.y+h, p.z+l);
-        glVertex3f(p.x-w, p.y+h, p.z-l);
-        glVertex3f(p.x-w, p.y-h, p.z-l);
-        glVertex3f(p.x-w, p.y-h, p.z+l);
-      glEnd();
+        p.x+w, p.y+h, p.z+l,
+        p.x+w, p.y+h, p.z-l,
+        p.x+w, p.y-h, p.z-l,
+        p.x+w, p.y-h, p.z+l,
      
+        p.x-w, p.y+h, p.z+l,
+        p.x-w, p.y+h, p.z-l,
+        p.x-w, p.y-h, p.z-l,
+        p.x-w, p.y-h, p.z+l
+    }; 
     
      if (DEBUG_RENDER) { 
        glColor3f(1.f,1.f,1.f);

@@ -132,7 +132,7 @@ void GraphicsContext::setupBuffers() {
   GLuint buffers[2];
   glGenBuffers(2,buffers);
   glBindBuffer(GL_ARRAY_BUFFER, buffers[0]); 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*4, NULL, GL_STREAM_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*27, NULL, GL_STREAM_DRAW);
 
   glEnableVertexAttribArray(vertexID);
   glVertexAttribPointer(vertexID , 4, GL_FLOAT, 0,0,0);
@@ -157,7 +157,7 @@ bool GraphicsContext::initGraphicsContext() {
   setupBuffers();
 
   glClearColor(0.f,0.f,0.f,1.f);
-  glEnable(GL_DEPTH_TEST);
+  //glEnable(GL_DEPTH_TEST);
   return checkGLError(__FUNCTION__);
 }
 
@@ -183,30 +183,19 @@ std::string GraphicsContext::getShaderSourceCode(const std::string& filename) {
 bool loadMedia() {return true;}
 
 
-void drawAxis() {
-  glBegin(GL_LINES);
-    glColor3f(1,0,0);
-    glVertex3f(0,0,0);
-    glVertex3f(100,0,0);
-  glEnd();
-
-  glBegin(GL_LINES);
-    glColor3f(0,1,0);
-    glVertex3f(0,0,0);
-    glVertex3f(0,100,0);
-  glEnd();
-  
-  glBegin(GL_LINES);
-    glColor3f(0,0,1);
-    glVertex3f(0,0,0);
-    glVertex3f(0,0,100);
-  glEnd();
+GLfloat* drawAxis() {
+ GLfloat axis[27] = { 1,0,0,0,0,0,100,0,0,
+                      0,1,0,0,0,0,0,100,0,
+                      0,0,1,0,0,0,0,0,100
+                    };
+ GLfloat* axisptr = axis; 
+ return axisptr;
 }
 
 
 void output(int x,int y, float r, float g, float b, char string[]) {
   glColor3f (r,g,b);
-  glRasterPos2f(x,y);
+  //glRasterPos2f(x,y);
   int len, i;
   len = (int)strlen(string);
   for (i = 0; i < len; i++) {

@@ -44,7 +44,7 @@ add_library( Graphics STATIC
   OBJLoader.cpp
 )
 
-target_link_libraries( Graphics GLEW ${GLUT_LIBRARY} Gravel GLU )
+target_link_libraries( Graphics GLEW ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} Gravel GLU )
 
 add_library( Game STATIC
   Sprite.cpp
