@@ -14,8 +14,7 @@ static GLfloat vertices;
 GraphicsContext::GraphicsContext()
   :_program(0),
    _fragmentShader(0),
-   _vertexShader(0),
-   _texture(0)
+   _vertexShader(0)
   {}
 
 
