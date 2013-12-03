@@ -42,6 +42,7 @@ add_library( Graphics STATIC
   Object.cpp
   Camera.cpp
   OBJLoader.cpp
+  VertexArrayObject.cpp
 )
 
 target_link_libraries( Graphics GLEW ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} Gravel GLU )

@@ -1,4 +1,5 @@
 #include <GraphicsContext.h>
+#include <VertexArrayObject.h>
 
 #include <gl_libs.h>
 #include <fstream>
@@ -106,15 +107,12 @@ void GraphicsContext::setupShaders() {
   checkGLError(__FUNCTION__);
 }
 
-
-void GraphicsContext::setupBuffers() {
+void GraphicsContext::setupUniforms() {
   
   const char* proMat = "projectionMatrix\0";
   const char* viewMat = "viewMatrix\0";
+  
   GLint projectionMatID, viewMatID;
-  
-  vertexID = glGetAttribLocation(_program,"position\0");
-  
   projectionMatID = glGetUniformLocation(_program, (const GLchar*)proMat);
   viewMatID = glGetUniformLocation(_program, (const GLchar*)viewMat);
   
@@ -124,6 +122,14 @@ void GraphicsContext::setupBuffers() {
 
   glUniformMatrix4fv(projectionMatID, 1, GL_FALSE, (GLfloat *)projection.m);   
   glUniformMatrix4fv(viewMatID, 1, GL_FALSE, (GLfloat *)view.m);   
+  checkGLError(__FUNCTION__);
+};
+
+void GraphicsContext::setupBuffers() {
+  
+  setupUniforms();
+  
+  vertexID = glGetAttribLocation(_program,"position\0");
   
   glGenVertexArrays(1, vertexArray);
   glBindVertexArray(vertexArray[0]);
@@ -135,6 +141,7 @@ void GraphicsContext::setupBuffers() {
 
   glEnableVertexAttribArray(vertexID);
   glVertexAttribPointer(vertexID , 4, GL_FLOAT, 0,0,0);
+  
   checkGLError(__FUNCTION__);
 }
 
@@ -151,8 +158,7 @@ bool GraphicsContext::initGraphicsContext() {
   linkProgram();
   
   glUseProgram(_program);  
-  
-  
+    
   setupBuffers();
 
   glClearColor(0.f,0.f,0.f,1.f);
