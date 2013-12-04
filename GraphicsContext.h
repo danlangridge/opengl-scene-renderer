@@ -24,6 +24,7 @@ private:
   std::string getShaderSourceCode(const std::string& filename);
   void setupBuffers(); 
   void setupUniforms();
+  void setupArrays(); 
   void setupShaders();
   bool linkProgram();
 };

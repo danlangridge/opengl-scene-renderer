@@ -1,8 +1,16 @@
 #include <VertexArrayObject.h>
 
+
 VertexArrayObject::VertexArrayObject() {
-  glGenVertexArrays(1, &ID);
 }
+
+
+void VertexArrayObject::generateArray() {
+  GLuint buffer[1];
+  glGenVertexArrays(1, buffer);
+  ID = buffer[0];
+}
+
 
 void VertexArrayObject::addArrayPointer(const GLuint& vertexID, std::vector<GLfloat>& vertexContainer) {
 
@@ -14,5 +22,5 @@ void VertexArrayObject::addArrayPointer(const GLuint& vertexID, std::vector<GLfl
   glBufferData(GL_ARRAY_BUFFER, vertexContainer.size()*sizeof(GLfloat), &vertexContainer[0], GL_STREAM_DRAW);
 
   glEnableVertexAttribArray(vertexID);
-  glVertexAttribPointer(vertexID , 4, GL_FLOAT, 0,0,0);
+  glVertexAttribPointer(vertexID , 4, GL_FLOAT, GL_FALSE,0,0);
 }

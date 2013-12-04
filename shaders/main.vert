@@ -9,7 +9,7 @@ varying vec4 fragColor;
 
 void main()
 {
-    gl_Position = projectionMatrix *  viewMatrix * position;
+    gl_Position = projectionMatrix * viewMatrix * position;
     
     // ----- Fragment input ----- // 
     fragColor = vertColor; 

@@ -2,22 +2,28 @@
 #include <VertexArrayObject.h>
 
 #include <gl_libs.h>
-#include <fstream>
-#include <sstream>
 #include <statics.h>
 #include <Sprite.h>
 
-static Mat4 modelview = Mat4(), projection = Mat4();
+#include <vector>
+#include <fstream>
+#include <sstream>
+
+
+static Mat4 view, projection;
 static GLuint vertexArray[1];
 static GLuint vertexID;
 static GLfloat vertices;
+
+static Camera globalCamera;
+static VertexArrayObject vao; 
+
 
 GraphicsContext::GraphicsContext()
   :_program(0),
    _fragmentShader(0),
    _vertexShader(0)
   {}
-
 
 bool checkGLError(const std::string& function) {
 
@@ -107,40 +113,56 @@ void GraphicsContext::setupShaders() {
   checkGLError(__FUNCTION__);
 }
 
+
 void GraphicsContext::setupUniforms() {
   
   const char* proMat = "projectionMatrix\0";
   const char* viewMat = "viewMatrix\0";
   
-  GLint projectionMatID, viewMatID;
+  GLint projectionMatID = 0, viewMatID = 0;
   projectionMatID = glGetUniformLocation(_program, (const GLchar*)proMat);
   viewMatID = glGetUniformLocation(_program, (const GLchar*)viewMat);
   
   printf("ID: %i %i\n", projectionMatID, viewMatID); 
+ 
+  projection = globalCamera.getProjectionMatrix();
   
-  Mat4 view;
+  view = Mat4();
 
   glUniformMatrix4fv(projectionMatID, 1, GL_FALSE, (GLfloat *)projection.m);   
   glUniformMatrix4fv(viewMatID, 1, GL_FALSE, (GLfloat *)view.m);   
+   
   checkGLError(__FUNCTION__);
-};
+}
+
+
+std::vector<GLfloat> drawAxis() {
+  GLfloat a[27] = {
+                      1,0,0,0,0,0,100,0,0,
+                      0,1,0,0,0,0,0,100,0,
+                      0,0,1,0,0,0,0,0,100
+                  };
+  std::vector<GLfloat> axis(a,a + 27); 
+  return axis; 
+}
+
+
+void GraphicsContext::setupArrays() {
+  
+  vertexID = glGetAttribLocation(_program,"position\0");
+  vao.generateArray();
+  std::vector<GLfloat> axis = drawAxis();
+  vao.addArrayPointer(vertexID, axis);
+
+  checkGLError(__FUNCTION__);
+}
+
 
 void GraphicsContext::setupBuffers() {
   
   setupUniforms();
-  
-  vertexID = glGetAttribLocation(_program,"position\0");
-  
-  glGenVertexArrays(1, vertexArray);
-  glBindVertexArray(vertexArray[0]);
-
-  GLuint buffers[2];
-  glGenBuffers(2,buffers);
-  glBindBuffer(GL_ARRAY_BUFFER, buffers[0]); 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*27, NULL, GL_STREAM_DRAW);
-
-  glEnableVertexAttribArray(vertexID);
-  glVertexAttribPointer(vertexID , 4, GL_FLOAT, 0,0,0);
+ 
+  setupArrays();
   
   checkGLError(__FUNCTION__);
 }
@@ -151,7 +173,6 @@ bool GraphicsContext::initGraphicsContext() {
   _program = glCreateProgram();
 
   setupShaders();
-  
   glAttachShader(_program, _vertexShader);
   glAttachShader(_program, _fragmentShader);
     
@@ -161,8 +182,6 @@ bool GraphicsContext::initGraphicsContext() {
     
   setupBuffers();
 
-  glClearColor(0.f,0.f,0.f,1.f);
-  //glEnable(GL_DEPTH_TEST);
   return checkGLError(__FUNCTION__);
 }
 
@@ -186,16 +205,6 @@ std::string GraphicsContext::getShaderSourceCode(const std::string& filename) {
 
 //TODO: Setup process to load textures
 bool loadMedia() {return true;}
-
-
-GLfloat* drawAxis() {
- GLfloat axis[27] = { 1,0,0,0,0,0,100,0,0,
-                      0,1,0,0,0,0,0,100,0,
-                      0,0,1,0,0,0,0,0,100
-                    };
- GLfloat* axisptr = axis; 
- return axisptr;
-}
 
 
 void output(int x,int y, float r, float g, float b, char string[]) {
@@ -238,9 +247,7 @@ void render() {
    pfRender(holder[i]);
   } 
   
-  drawAxis(); 
-  outPosition();
-  
+  outPosition(); 
 
   glBindVertexArray(vertexArray[0]);
   glDrawArrays(GL_TRIANGLES,0,3);
