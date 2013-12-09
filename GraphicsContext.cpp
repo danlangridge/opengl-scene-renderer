@@ -126,9 +126,7 @@ void GraphicsContext::setupUniforms() {
   printf("ID: %i %i\n", projectionMatID, viewMatID); 
  
   projection = globalCamera.getProjectionMatrix();
-  
-  view = Mat4();
-
+ 
   glUniformMatrix4fv(projectionMatID, 1, GL_FALSE, (GLfloat *)projection.m);   
   glUniformMatrix4fv(viewMatID, 1, GL_FALSE, (GLfloat *)view.m);   
    

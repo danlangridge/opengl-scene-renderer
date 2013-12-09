@@ -5,6 +5,7 @@
 
 class OBJLoader : public Loader {
 
-Vector* loadModelFromFile(std::string filename); 
+public:
+  Vector* loadModelFromFile(std::string filename); 
 
 };
