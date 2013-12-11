@@ -10,6 +10,17 @@ target_link_libraries ( LoaderTests
                         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} 
                       )
 
+add_executable ( ObjectTests ObjectTests.cpp )
+
+add_dependencies ( ObjectTests Graphics Gravel )
+
+target_link_libraries ( ObjectTests
+                        Graphics
+                        Gravel
+                        ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} 
+                      )
+
 enable_testing ()
 
 add_test ( LDTests LoaderTests )
+add_test ( OBTests ObjectTests )
