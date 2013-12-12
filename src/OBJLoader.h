@@ -1,7 +1,7 @@
 #include <Loader.h>
 
 #include <Vector.h>
-#include <string.h>
+#include <string>
 
 class OBJLoader : public Loader {
 

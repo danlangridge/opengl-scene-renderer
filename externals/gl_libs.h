@@ -9,8 +9,4 @@
 #include <GL/glu.h>
 #include <GL/glext.h>
 
-#include <string.h>
-#include <sstream>
 #include <stdio.h>
-#include <cmath>
-
