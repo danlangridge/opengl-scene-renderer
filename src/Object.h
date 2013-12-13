@@ -9,6 +9,7 @@ class Object {
 public:
  
  Object(); 
+ Object(Vector position, Vector orientation); 
  
  void setPosition(GLfloat x, GLfloat y, GLfloat z);
 

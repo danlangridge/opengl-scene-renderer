@@ -4,9 +4,14 @@ Object::Object()
  :_position(), _orientation(), _rotationPower(16,16,16)
 {
 }
- 
- 
-void Object::setPosition(GLfloat x, GLfloat y, GLfloat z) {
+
+
+Object::(Vector position, Vector orientation)
+ :_position(position), _orientation(orientation)
+}
+
+
+ void Object::setPosition(GLfloat x, GLfloat y, GLfloat z) {
  _position.x = x;
  _position.y = y;
  _position.z = z; 

@@ -29,15 +29,6 @@ void KeyInput::handleInput(unsigned char key, int x, int y) {
   else if (key == 'b') {rotatea++;}
   else if (key == 'z') {rotatea = 0; rotatei = 0; rotatej = 0; rotatek = 0;}
   
-  
-  //glMatrixMode(GL_MODELVIEW);
-  //glPopMatrix();
-  //glLoadIdentity();
-
   Vector position = userContext->getPosition();
-  //glTranslatef(position.x, 
-  //             position.y, 
-  //             position.z);
-  //glPushMatrix();
 }
 
