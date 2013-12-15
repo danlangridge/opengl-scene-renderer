@@ -25,6 +25,7 @@ GraphicsContext::GraphicsContext()
    _vertexShader(0)
   {}
 
+
 bool checkGLError(const std::string& function) {
 
   GLenum error;
@@ -207,7 +208,6 @@ bool loadMedia() {return true;}
 
 void output(int x,int y, float r, float g, float b, char string[]) {
   glColor3f (r,g,b);
-  //glRasterPos2f(x,y);
   int len, i;
   len = (int)strlen(string);
   for (i = 0; i < len; i++) {
