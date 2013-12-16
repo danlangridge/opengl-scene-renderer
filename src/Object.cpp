@@ -6,8 +6,21 @@ Object::Object()
 }
 
 
-Object::(Vector position, Vector orientation)
+Object::Object(Vector position)
+ :_position(position), _orientation()
+{
+}
+
+
+Object::Object(Quaternion orientation)
+ :_position(), _orientation(orientation)
+{
+}
+
+
+Object::Object(Vector position, Quaternion orientation)
  :_position(position), _orientation(orientation)
+{
 }
 
 

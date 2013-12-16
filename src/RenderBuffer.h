@@ -4,5 +4,4 @@
 
 class RenderBuffer {
   boost::unordered_map<std::string,VertexArrayObject> _objectsCurrentlyRendering;
-
 };

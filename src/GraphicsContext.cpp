@@ -136,6 +136,7 @@ void GraphicsContext::setupUniforms() {
 
 
 std::vector<GLfloat> drawAxis() {
+
   GLfloat a[27] = {
                       1,0,0,0,0,0,100,0,0,
                       0,1,0,0,0,0,0,100,0,
@@ -207,6 +208,7 @@ bool loadMedia() {return true;}
 
 
 void output(int x,int y, float r, float g, float b, char string[]) {
+ 
   glColor3f (r,g,b);
   int len, i;
   len = (int)strlen(string);
@@ -263,17 +265,17 @@ void runMainLoop(int val) {
 
 
 void handleKeys(unsigned char key, int x, int y) {
-gameContext->getUserContext()->_keyInput->handleInput(key,x,y);
+  gameContext->getUserContext()->_keyInput->handleInput(key,x,y);
 }
 
 
 void handleMouseMovement(int x, int y) {
- gameContext->getUserContext()->_mouseInput->handleMouseMovement(x,y);
+  gameContext->getUserContext()->_mouseInput->handleMouseMovement(x,y);
 }
 
 
 void handleMouseClick(int button, int state, int x, int y) {
-gameContext->getUserContext()->_mouseInput->handleMouseClick(button,state,x,y);
+  gameContext->getUserContext()->_mouseInput->handleMouseClick(button,state,x,y);
 }
 
 
