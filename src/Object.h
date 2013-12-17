@@ -9,7 +9,9 @@ class Object {
 public:
  
  Object(); 
- Object(Vector position, Vector orientation); 
+ Object(Vector position);
+ Object(Quaternion orientation);
+ Object(Vector position, Quaternion orientation); 
  
  void setPosition(GLfloat x, GLfloat y, GLfloat z);
 

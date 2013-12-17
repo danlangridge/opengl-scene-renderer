@@ -1,7 +1,6 @@
 #include <OBJLoader.h>
-
 #include <fstream>
-
+#include <string>
 
 Vector* OBJLoader::loadModelFromFile(std::string filename) {
 
@@ -16,35 +15,31 @@ Vector* OBJLoader::loadModelFromFile(std::string filename) {
   Vector* currentVector;
   
   while(file.good()) {
+  
+   // get next contiguous word/number
+   file.getline(currentWord, 256);    
+  
+   std::string currentWordString(currentWord);
    
-   file.get(currentWord, 256);    
-   
-   if (currentWord[0] == '#') {
+   // Comment. Ignore and move on
+   if (currentWordString[0] == '#') {
      file.getline(currentWord, 256);
    }
-   if (currentWord[0] == 'v') {
-     model[modelIndex] = *currentVector; 
-   }
-   else {
-     switch(vectorIndex) {
-       case 0:
-         currentVector->x = (float)*currentWord; 
-         break;
-       case 1:
-         currentVector->y = (float)*currentWord; 
-         break;
-       case 2:
-         currentVector->z = (float)*currentWord; 
-         break;
-       case 3:
-         vectorIndex = 0;
-         modelIndex++;
-         currentVector = new Vector();
-       break;
+   else if (currentWordString[0] == 'v') {
+     currentVector = new Vector();
+     model[modelIndex] = *currentVector;
+     int i = 0;
+     while ( currentWordString.find(' ') ) {
+       std::string posData = currentWordString.substr(0,currentWordString.find("\\"));
+       //currentVector[i] = atof(posData.c_str()); 
+       i++;
+       currentWordString = currentWordString.substr(' ',currentWordString.length());
      }
-     vectorIndex++;
+     modelIndex++;
    }
-
+   else if (currentWordString[0] == 'f') {
+     //TODO: handle face data 
+   }
   }
 
   file.close();
