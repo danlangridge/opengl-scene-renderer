@@ -59,6 +59,22 @@ bool checkShaderCompilation(const GLint &shader) {
   return true;
 }
 
+void printShaderInfoLog(GLuint shader) {
+   
+   GLint infoLength = 0, numCharsWritten = 0; 
+   glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &infoLength );
+   GLchar* infoLog;
+
+   printf("infoLength: %i", infoLength); 
+   if (infoLength > 0) {
+     
+     infoLog = new GLchar[infoLength];
+     glGetProgramInfoLog(shader, infoLength, &numCharsWritten, infoLog);
+
+     printf("GLSL: %s\n", infoLog);
+   }
+
+}
 
 bool GraphicsContext::linkProgram() {
   
@@ -110,6 +126,9 @@ void GraphicsContext::setupShaders() {
   
   glCompileShader(_fragmentShader);
   checkShaderCompilation(_fragmentShader); 
+  
+  printShaderInfoLog(_vertexShader);
+  printShaderInfoLog(_fragmentShader);
   
   checkGLError(__FUNCTION__);
 }
