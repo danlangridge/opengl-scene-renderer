@@ -56,14 +56,6 @@
         p.x-w, p.y-h, p.z-l,
         p.x-w, p.y-h, p.z+l
     }; 
-    
-     if (DEBUG_RENDER) { 
-       glColor3f(1.f,1.f,1.f);
-         glBegin(GL_LINES);
-            glVertex2f(p.x,p.y);
-            glVertex2f(p.x+v.x,p.y+v.y);
-         glEnd();
-    }
    }
    
    Sprite::~Sprite() {

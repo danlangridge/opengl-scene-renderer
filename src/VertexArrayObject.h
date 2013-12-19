@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <gl_libs.h>
 
