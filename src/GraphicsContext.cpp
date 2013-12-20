@@ -77,10 +77,7 @@ void GraphicsContext::setupShaders() {
   
   glCompileShader(_fragmentShader);
   checkShaderCompilation(_fragmentShader); 
-  
-  printShaderInfoLog(_vertexShader);
-  printShaderInfoLog(_fragmentShader);
-  
+   
   checkGLError(__FUNCTION__);
 }
 
@@ -145,12 +142,15 @@ bool GraphicsContext::initGraphicsContext() {
   setupShaders();
   glAttachShader(_program, _vertexShader);
   glAttachShader(_program, _fragmentShader);
-    
+   
   linkProgram();
   
   glUseProgram(_program);  
     
   setupBuffers();
+  
+  printShaderInfoLog(_vertexShader);
+  printShaderInfoLog(_fragmentShader);
 
   return checkGLError(__FUNCTION__);
 }

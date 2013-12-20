@@ -44,19 +44,17 @@ bool checkShaderCompilation(const GLint &shader) {
 }
 
 
-void printShaderInfoLog(GLuint shader) {
-   
-   GLint infoLength = 0, numCharsWritten = 0; 
-   glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &infoLength );
-   GLchar* infoLog;
+void printShaderInfoLog(const GLint &shader) {
 
-   printf("infoLength: %i", infoLength); 
-   if (infoLength > 0) {
-     
-     infoLog = new GLchar[infoLength];
-     glGetProgramInfoLog(shader, infoLength, &numCharsWritten, infoLog);
+  GLint maxLength = 0;
+  glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
-     printf("GLSL: %s\n", infoLog);
-   }
+  if (maxLength > 1) {
+    GLchar* infoLog = new GLchar[maxLength];
+    glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
 
+    printf("GLSL: %s\n", infoLog);
+  }
+
+  checkGLError(__FUNCTION__);  
 }
