@@ -19,6 +19,8 @@ static GLfloat vertices;
 static Camera globalCamera;
 static VertexArrayObject vao; 
 
+static VertexArrayObject testTriangleVao;
+
 
 GraphicsContext::GraphicsContext()
   :_program(0),
@@ -109,8 +111,19 @@ std::vector<GLfloat> drawAxis() {
                       0,1,0,0,0,0,0,100,0,
                       0,0,1,0,0,0,0,0,100
                   };
-  std::vector<GLfloat> axis(a,a + 27); 
+  std::vector<GLfloat> axis(a,a + sizeof(a)); 
   return axis; 
+}
+
+
+std::vector<GLfloat> testTriangle() {
+  GLfloat t[9] = {
+                    1,0,0,
+                    0,1,0,
+                    0,0,1
+                 };
+  std::vector<GLfloat> triangle(t,t + sizeof(t));
+  return triangle;
 }
 
 
@@ -118,8 +131,13 @@ void GraphicsContext::setupArrays() {
   
   vertexID = glGetAttribLocation(_program,"position\0");
   vao.generateArray();
+  testTriangleVao.generateArray();
+
   std::vector<GLfloat> axis = drawAxis();
-  vao.addArrayPointer(vertexID, axis);
+  std::vector<GLfloat> triangle = testTriangle();
+
+  //vao.addArrayPointer(vertexID, axis);
+  testTriangleVao.addArrayPointer(vertexID, triangle);
 
   checkGLError(__FUNCTION__);
 }
@@ -219,8 +237,8 @@ void render() {
   
   outPosition(); 
 
-  glBindVertexArray(vertexArray[0]);
-  glDrawArrays(GL_TRIANGLES,0,3);
+  glBindVertexArray(testTriangleVao.ID);
+  glDrawArrays(GL_TRIANGLES,0,1);
 
   glutSwapBuffers();
 }
