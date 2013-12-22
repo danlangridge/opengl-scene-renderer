@@ -118,9 +118,9 @@ std::vector<GLfloat> drawAxis() {
 
 std::vector<GLfloat> testTriangle() {
   GLfloat t[9] = {
-                    1,0,0,
-                    0,1,0,
-                    0,0,1
+                    1,0,101,
+                    0,1,101,
+                    0,0,101
                  };
   std::vector<GLfloat> triangle(t,t + sizeof(t));
   return triangle;
@@ -241,6 +241,7 @@ void render() {
   glDrawArrays(GL_TRIANGLES,0,1);
 
   glutSwapBuffers();
+  checkGLError(__FUNCTION__);
 }
 
 

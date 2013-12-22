@@ -8,14 +8,14 @@ Camera::Camera()
    _fov(90),
    _focalPoint(0)
 {
-  setProjectionMatrix(_near,_far,_fov);
+  setPerspectiveMatrix(_near,_far,_fov);
 }
 
 Mat4 Camera::getProjectionMatrix() {
   return _projection;
 }
 
-void Camera::setProjectionMatrix(GLfloat near, GLfloat far, GLfloat fov) {
+void Camera::setPerspectiveMatrix(GLfloat near, GLfloat far, GLfloat fov) {
  
  _near = near;
  _far = far;
@@ -27,4 +27,7 @@ void Camera::setProjectionMatrix(GLfloat near, GLfloat far, GLfloat fov) {
  _projection = Mat4(mat);  
 }
 
-
+void Camera::setOrthographicProjectionMatrix() {
+  GLfloat mat[16] = {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1};
+  _projection = Mat4(mat);
+}

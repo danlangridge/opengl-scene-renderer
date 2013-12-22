@@ -17,7 +17,8 @@ public:
   * set the projection matrix used for calculating the view 
   */
  Mat4 getProjectionMatrix();
- void setProjectionMatrix(GLfloat near, GLfloat far, GLfloat fov);
+ void setPerspectiveMatrix(GLfloat near, GLfloat far, GLfloat fov);
+ void setOrthographicProjectionMatrix();
 
 private: 
 
