@@ -9,13 +9,15 @@
 #include <fstream>
 #include <sstream>
 
+#define LOG_DEBUG(...) printf(__VA_ARGS__)
+
 
 bool checkGLError(const std::string& function) {
 
   GLenum error;
   error = glGetError(); 
   if(error != GL_NO_ERROR) { 
-    printf("OpenGL Error!\n%s: %s\n",function.c_str(), gluErrorString(error));
+    LOG_DEBUG("OpenGL Error!\n%s: %s\n",function.c_str(), gluErrorString(error));
     return false;
   } 
   return true;
@@ -28,14 +30,14 @@ bool checkShaderCompilation(const GLint &shader) {
   glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
   
   if (isCompiled == GL_FALSE) {
-    printf("Shader Compilation Failed!\n");
+    LOG_DEBUG("Shader Compilation Failed!\n");
     GLint maxLength = 0;
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
     GLchar* infoLog = new GLchar[maxLength];
     glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
 
-    printf("Could not compile: %s\n", infoLog);
+    LOG_DEBUG("Could not compile: %s\n", infoLog);
     checkGLError(__FUNCTION__);
     return false; 
   }
@@ -53,7 +55,7 @@ void printShaderInfoLog(const GLint &shader) {
     GLchar* infoLog = new GLchar[maxLength];
     glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
 
-    printf("GLSL: %s\n", infoLog);
+    LOG_DEBUG("GLSL: %s\n", infoLog);
   }
 
   checkGLError(__FUNCTION__);  

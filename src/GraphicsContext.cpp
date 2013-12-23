@@ -37,13 +37,13 @@ bool GraphicsContext::linkProgram() {
 
   glGetProgramiv(_program, GL_LINK_STATUS, &isLinked);
   if(!isLinked) {
-    printf("Program not linked correctly!\n"); 
+    LOG_DEBUG("Program not linked correctly!\n"); 
     GLint maxLength = 0;
     glGetProgramiv(_program, GL_INFO_LOG_LENGTH, &maxLength);
 
     GLchar* infoLog = new GLchar[maxLength];
     glGetProgramInfoLog(_program, maxLength, &maxLength, infoLog);
-    printf("%s\n", infoLog);
+    LOG_DEBUG("%s\n", infoLog);
     checkGLError(__FUNCTION__);
     return false; 
   }
@@ -93,10 +93,13 @@ void GraphicsContext::setupUniforms() {
   projectionMatID = glGetUniformLocation(_program, (const GLchar*)proMat);
   viewMatID = glGetUniformLocation(_program, (const GLchar*)viewMat);
   
-  printf("ID: %i %i\n", projectionMatID, viewMatID); 
- 
+  LOG_DEBUG("ID: %i %i\n", projectionMatID, viewMatID); 
+
+  //globalCamera.setOrthographicProjectionMatrix();
   projection = globalCamera.getProjectionMatrix();
- 
+  
+  LOG_DEBUG("matrix:\n%s", projection.output().c_str());
+
   glUniformMatrix4fv(projectionMatID, 1, GL_FALSE, (GLfloat *)projection.m);   
   glUniformMatrix4fv(viewMatID, 1, GL_FALSE, (GLfloat *)view.m);   
    
@@ -177,10 +180,10 @@ bool GraphicsContext::initGraphicsContext() {
 std::string GraphicsContext::getShaderSourceCode(const std::string& filename) {
   std::ifstream file (filename.c_str());
  
-  printf("opening file: %s\n", filename.c_str());
+  LOG_DEBUG("opening file: %s\n", filename.c_str());
   
   if (!file) {
-    printf("Opening file failed\n"); 
+    LOG_DEBUG("Opening file failed\n"); 
   }
 
   std::stringstream shaderData;
@@ -280,16 +283,16 @@ bool GraphicsContext::InitGLHelperLibraries(int argv, char* argc[]) {
 
   GLenum err = glewInit();
   if (GLEW_OK != err) {
-    printf("issues initializing GLEW: %s\n", glewGetErrorString(err) );
+    LOG_DEBUG("issues initializing GLEW: %s\n", glewGetErrorString(err) );
     return false; 
   }
   
   // INITIALIZE OPENGL AND LOADMEDIA
   if (!initGraphicsContext()) {
-    printf("Cannot initialize OpenGL!");
+    LOG_DEBUG("Cannot initialize OpenGL!");
     return false; 
   } 
-  if (!loadMedia()) printf("Cannot load media!\n"); 
+  if (!loadMedia()) LOG_DEBUG("Cannot load media!\n"); 
   
   glutKeyboardFunc(handleKeys);
   glutMotionFunc(handleMouseMovement);
