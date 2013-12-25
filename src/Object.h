@@ -24,10 +24,6 @@ public:
 
  void setRotation(GLfloat a, GLfloat x, GLfloat y, GLfloat z);
  
- void rotateX();
- void rotateY();
- void rotateZ();
-
  void setRotationPower(GLfloat x, GLfloat y, GLfloat z);
 
  Vector getRotationPower(); 

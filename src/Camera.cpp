@@ -27,7 +27,15 @@ void Camera::setPerspectiveMatrix(GLfloat near, GLfloat far, GLfloat fov) {
  _projection = Mat4(mat);  
 }
 
-void Camera::setOrthographicProjectionMatrix() {
+void Camera::setOrthographicMatrix() {
   GLfloat mat[16] = {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1};
   _projection = Mat4(mat);
+}
+
+void Camera::rotateTheta(GLfloat angle) {
+  GLfloat m[16] = { 1, 0, 0, 0,
+                      0, cos(angle), 1, 0,
+                      0, -sin(angle) - 1, 0
+                    };
+  Mat4 mat(m); 
 }

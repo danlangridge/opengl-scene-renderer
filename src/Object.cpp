@@ -52,22 +52,7 @@ void Object::setRotation(GLfloat a, GLfloat x, GLfloat y, GLfloat z) {
  _orientation = Quaternion(a,x,y,z);
 }
  
- 
-void Object::rotateX() {
- _orientation.v.x += _rotationPower.x;
-}
 
- 
-void Object::rotateY() {
- _orientation.v.y += _rotationPower.y;
-}
- 
- 
-void Object::rotateZ() {
- _orientation.v.z += _rotationPower.z;
-}
-
- 
 void Object::setRotationPower(GLfloat x, GLfloat y, GLfloat z) {
  _rotationPower.x = x;
  _rotationPower.y = y;

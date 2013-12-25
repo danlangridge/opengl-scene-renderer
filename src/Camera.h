@@ -18,7 +18,8 @@ public:
   */
  Mat4 getProjectionMatrix();
  void setPerspectiveMatrix(GLfloat near, GLfloat far, GLfloat fov);
- void setOrthographicProjectionMatrix();
+ void setOrthographicMatrix();
+ void rotateTheta(GLfloat angle);
 
 private: 
 

@@ -18,7 +18,3 @@ UserContext::UserContext()
  Vector UserContext::getPosition() {
   return _camera->getPosition();
  }
-
-
- void UserContext::Fire() {
- }
