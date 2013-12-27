@@ -28,7 +28,7 @@ public:
 
  Vector getRotationPower(); 
 
-private:
+protected:
  // Position of the Object in the world
  Vector _position;
  

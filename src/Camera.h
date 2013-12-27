@@ -1,7 +1,8 @@
 #pragma once
+#include <Object.h>
+
 #include <Vector.h>
 #include <Mat4.h>
-#include <Object.h>
 
 /**
  * An Object used to record visual images
@@ -20,6 +21,7 @@ public:
  void setPerspectiveMatrix(GLfloat near, GLfloat far, GLfloat fov);
  void setOrthographicMatrix();
  void rotateTheta(GLfloat angle);
+ void rotatePhi(GLfloat angle);
 
 private: 
 
