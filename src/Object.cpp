@@ -63,3 +63,7 @@ void Object::setRotationPower(GLfloat x, GLfloat y, GLfloat z) {
 Vector Object::getRotationPower() {
  return _rotationPower;
 }
+
+void Object::resetOrientation() {
+ _orientation = Quaternion();
+}

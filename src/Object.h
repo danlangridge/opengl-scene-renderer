@@ -26,7 +26,9 @@ public:
  
  void setRotationPower(GLfloat x, GLfloat y, GLfloat z);
 
- Vector getRotationPower(); 
+ Vector getRotationPower();
+ 
+ void resetOrientation();
 
 protected:
  // Position of the Object in the world

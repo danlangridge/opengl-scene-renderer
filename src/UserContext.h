@@ -32,7 +32,5 @@ public:
  void Move(float x, float y, float z);
  
  Vector getPosition();
- 
- void Fire();
- 
+  
 };

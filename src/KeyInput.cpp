@@ -23,11 +23,11 @@ void KeyInput::handleInput(unsigned char key, int x, int y) {
     }
   } 
   else if (key == 'q') {exit(0);}
-  else if (key == 'x') {rotatei++;}
-  else if (key == 'c') {rotatej++;}
-  else if (key == 'v') {rotatek++;}
-  else if (key == 'b') {rotatea++;}
-  else if (key == 'z') {rotatea = 0; rotatei = 0; rotatej = 0; rotatek = 0;}
+  else if (key == 'x') {userContext->_camera->rotateTheta(1);}
+  else if (key == 'c') {userContext->_camera->rotateTheta(-1);}
+  else if (key == 'v') {userContext->_camera->rotatePhi(1);}
+  else if (key == 'b') {userContext->_camera->rotatePhi(-1);}
+  else if (key == 'z') {userContext->_camera->resetOrientation();}
   
   Vector position = userContext->getPosition();
 }
