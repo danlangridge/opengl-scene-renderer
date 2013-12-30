@@ -24,7 +24,7 @@ Object::Object(Vector position, Quaternion orientation)
 }
 
 
- void Object::setPosition(GLfloat x, GLfloat y, GLfloat z) {
+void Object::setPosition(GLfloat x, GLfloat y, GLfloat z) {
  _position.x = x;
  _position.y = y;
  _position.z = z; 

@@ -178,6 +178,7 @@ bool GraphicsContext::initGraphicsContext() {
 
 
 std::string GraphicsContext::getShaderSourceCode(const std::string& filename) {
+  
   std::ifstream file (filename.c_str());
  
   LOG_DEBUG("opening file: %s\n", filename.c_str());
@@ -210,6 +211,7 @@ void output(int x,int y, float r, float g, float b, char string[]) {
 
 
 void outPosition() {
+  
   char* str;
   std::string p;
   std::stringstream out;
@@ -221,6 +223,7 @@ void outPosition() {
 
 
 void pfRender(PFholder &part) {
+ 
  for (std::vector<PFcontainer*>::iterator i = part.PFstorage.begin(); 
       i!= part.PFstorage.end(); i++) {
   (*i)->particle->render();
@@ -232,6 +235,7 @@ extern void update();
 
 
 void render() {
+  
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
  
   for (unsigned i = 0; i < 4; i++) {
@@ -249,6 +253,7 @@ void render() {
 
 
 void runMainLoop(int val) {
+  
   update();
   render();
 
@@ -256,7 +261,7 @@ void runMainLoop(int val) {
 }
 
 
-void handleKeys(unsigned char key, int x, int y) {
+void handleKeys(unsigned char key, int x, int y) { 
   gameContext->getUserContext()->_keyInput->handleInput(key,x,y);
 }
 

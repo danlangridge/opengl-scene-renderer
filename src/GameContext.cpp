@@ -2,6 +2,8 @@
 #include <statics.h>
 #include <Sprite.h>
 
+#define ABS(x)  ((x <= 0) ? -x : x)  
+
 GameContext::GameContext()
   :_graphicsContext(new GraphicsContext()),
    _physicsContext(new PhysicsContext()), 
@@ -41,7 +43,6 @@ void boundsCheck(PFholder &part) {
  }
 }
 
-#define ABS(x)  ((x <= 0) ? -x : x)  
 
 void generateParticles(PFholder &ph, float x, float y, float z) {
   srand(10);
