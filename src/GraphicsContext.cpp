@@ -234,6 +234,17 @@ void pfRender(PFholder &part) {
 extern void update();
 
 
+void CLOutPosition() {
+  char* str;
+  std::string p;
+  std::stringstream out;
+  out << "POSITION X: " << " Y: " << " Z: ";
+  p = out.str();
+  str = (char*)(p.c_str());
+  printf(p.c_str()); 
+}
+
+
 void render() {
   
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -242,8 +253,8 @@ void render() {
    pfRender(holder[i]);
   } 
   
-  outPosition(); 
-
+  outPosition();
+  CLOutPosition();
   glBindVertexArray(testTriangleVao.ID);
   glDrawArrays(GL_TRIANGLES,0,1);
 
